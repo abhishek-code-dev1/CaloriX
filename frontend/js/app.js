@@ -1,5 +1,5 @@
 // Constants
-const API_BASE = 'http://localhost:3000/api';
+const API_BASE = 'https://calorix-vuq8.onrender.com';
 
 // DOM Elements
 const authBtn = document.getElementById('auth-btn');

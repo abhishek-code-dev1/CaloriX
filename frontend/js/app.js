@@ -47,7 +47,8 @@ const fallbackFoodsDB = {
 };
 
 // Constants
-const API_BASE = 'https://calorix-vuq8.onrender.com/api';
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_BASE = isLocal ? 'http://localhost:3000/api' : 'https://calorix-vuq8.onrender.com/api';
 
 // DOM Elements
 const authBtn = document.getElementById('auth-btn');
@@ -61,11 +62,69 @@ const calForm = document.getElementById('cal-form');
 
 // State
 let isLoggedIn = false;
+let allFoods = { healthy: [], unhealthy: [] };
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+  // Init AOS
+  AOS.init({
+    duration: 800,
+    easing: 'ease-out-back',
+    once: true
+  });
+
+  // Scroll Logic
+  const fab = document.querySelector('.fab');
+  const progressBar = document.getElementById('scroll-progress');
+
+  window.addEventListener('scroll', () => {
+    // Progress Bar
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    progressBar.style.width = scrolled + "%";
+
+    // FAB Visibility
+    if (winScroll > 300) {
+      fab.classList.add('visible');
+    } else {
+      fab.classList.remove('visible');
+    }
+  });
+
+  // Mobile Menu Toggle
+  const mobileMenu = document.getElementById('mobile-menu');
+  const navLinks = document.getElementById('nav-links');
+  
+  if (mobileMenu) {
+    mobileMenu.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      mobileMenu.querySelector('i').classList.toggle('fa-bars');
+      mobileMenu.querySelector('i').classList.toggle('fa-times');
+    });
+
+    // Close menu when clicking links
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        mobileMenu.querySelector('i').classList.add('fa-bars');
+        mobileMenu.querySelector('i').classList.remove('fa-times');
+      });
+    });
+  }
+
   fetchFoods();
 });
+
+// Celebration Effect
+function celebrate() {
+  confetti({
+    particleCount: 150,
+    spread: 70,
+    origin: { y: 0.6 },
+    colors: ['#6366f1', '#a855f7', '#00f2fe']
+  });
+}
 
 // Calculate BMI
 bmiForm.addEventListener('submit', async (e) => {
@@ -83,9 +142,7 @@ bmiForm.addEventListener('submit', async (e) => {
     else if (bmi >= 25 && bmi < 29.9) bmiCategory = 'Overweight';
     else if (bmi >= 30) bmiCategory = 'Obesity';
     
-    document.getElementById('res-bmi').innerText = bmi;
-    document.getElementById('res-category').innerText = bmiCategory;
-    document.getElementById('bmi-results').classList.remove('hidden');
+    updateBMIResult(bmi, bmiCategory);
   };
 
   try {
@@ -96,9 +153,8 @@ bmiForm.addEventListener('submit', async (e) => {
     });
     if (response.ok) {
       const data = await response.json();
-      document.getElementById('res-bmi').innerText = data.bmi;
-      document.getElementById('res-category').innerText = data.bmiCategory;
-      document.getElementById('bmi-results').classList.remove('hidden');
+      updateBMIResult(data.bmi, data.bmiCategory);
+      celebrate();
     } else {
       handleLocalBMI();
     }
@@ -107,6 +163,23 @@ bmiForm.addEventListener('submit', async (e) => {
     handleLocalBMI();
   }
 });
+
+function updateBMIResult(bmi, category) {
+  const resBmi = document.getElementById('res-bmi');
+  const resCat = document.getElementById('res-category');
+  const resDiv = document.getElementById('bmi-results');
+  const pointer = document.getElementById('bmi-pointer');
+
+  resBmi.innerText = bmi;
+  resCat.innerText = category;
+  resDiv.classList.remove('hidden');
+  resDiv.classList.add('reveal-up');
+
+  // Gauge pointer logic (15 to 40 BMI range)
+  let percentage = ((bmi - 15) / (40 - 15)) * 100;
+  percentage = Math.min(Math.max(percentage, 0), 100);
+  pointer.style.left = `${percentage}%`;
+}
 
 // Calculate Calories
 calForm.addEventListener('submit', async (e) => {
@@ -156,6 +229,7 @@ calForm.addEventListener('submit', async (e) => {
       document.getElementById('res-target').innerText = data.targetCalories;
       document.getElementById('res-recommendation').innerText = data.recommendation;
       document.getElementById('cal-results').classList.remove('hidden');
+      celebrate(); // Celeb on success
     } else {
       handleLocalCalories();
     }
@@ -171,19 +245,33 @@ async function fetchFoods() {
     const response = await fetch(`${API_BASE}/foods`);
     if(response.ok) {
       const data = await response.json();
+      allFoods = data; // Store globally
       renderFoods('healthy-items', data.healthy);
       renderFoods('unhealthy-items', data.unhealthy);
     } else {
       console.warn("Backend unavailable, using fallback foods.");
+      allFoods = fallbackFoodsDB;
       renderFoods('healthy-items', fallbackFoodsDB.healthy);
       renderFoods('unhealthy-items', fallbackFoodsDB.unhealthy);
     }
   } catch(err) {
     console.error("Failed to load foods from backend. Using fallback:", err);
+    allFoods = fallbackFoodsDB;
     renderFoods('healthy-items', fallbackFoodsDB.healthy);
     renderFoods('unhealthy-items', fallbackFoodsDB.unhealthy);
   }
 }
+
+// Search Logic
+document.getElementById('food-search').addEventListener('input', (e) => {
+  const term = e.target.value.toLowerCase();
+  
+  const filteredHealthy = allFoods.healthy.filter(f => f.name.toLowerCase().includes(term));
+  const filteredUnhealthy = allFoods.unhealthy.filter(f => f.name.toLowerCase().includes(term));
+  
+  renderFoods('healthy-items', filteredHealthy);
+  renderFoods('unhealthy-items', filteredUnhealthy);
+});
 
 function renderFoods(containerId, items) {
   const container = document.getElementById(containerId);

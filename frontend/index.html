@@ -6,9 +6,18 @@
   <title>CaloriX - Premium Calories & Health Meter</title>
   <meta name="referrer" content="no-referrer">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="./styles/main.css">
 </head>
 <body>
+
+
+
+  <!-- Scroll Progress Bar -->
+  <div class="progress-container">
+    <div class="progress-bar" id="scroll-progress"></div>
+  </div>
 
   <!-- Background Animated Elements -->
   <div class="blob blob-1"></div>
@@ -16,21 +25,28 @@
 
   <!-- Navbar -->
   <nav class="navbar glass">
-    <div class="logo">Calori<span>X</span></div>
-    <ul class="nav-links">
+    <div class="logo"><i class="fas fa-fire-alt" style="color: var(--primary-color); margin-right: 10px;"></i>Calori<span>X</span></div>
+    <ul class="nav-links" id="nav-links">
       <li><a href="#home">Home</a></li>
       <li><a href="#calculator">Calculator</a></li>
       <li><a href="#foods">Diet Chart</a></li>
     </ul>
-    <button id="auth-btn" class="btn btn-outline" onclick="openLoginModal()">Login</button>
+    <div class="nav-actions">
+      <button id="auth-btn" class="btn btn-outline" onclick="openLoginModal()"><i class="fas fa-user-circle"></i> <span>Login</span></button>
+      <div class="menu-toggle" id="mobile-menu">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
   </nav>
 
   <!-- Hero Section -->
   <section id="home" class="hero">
-    <div class="hero-content">
+    <div class="hero-content" data-aos="zoom-out" data-aos-duration="1200">
       <h1 class="animate-up">Achieve Your <span>Dream Physique</span></h1>
       <p class="animate-up delay-1">Measure your weight relative to height, calculate precise caloric needs for cutting, bulking, or maintenance, and discover the best foods.</p>
-      <a href="#calculator" class="btn btn-primary animate-up delay-2">Get Started</a>
+      <div class="hero-btns animate-up delay-2">
+        <a href="#calculator" class="btn btn-primary">Start Your Journey <i class="fas fa-arrow-right"></i></a>
+      </div>
     </div>
   </section>
 
@@ -39,8 +55,8 @@
     <div class="calculators-container">
       
       <!-- BMI Form -->
-      <div class="glass-card form-card">
-        <h2>BMI Calculator</h2>
+      <div class="glass-card form-card" data-aos="fade-right">
+        <h2><i class="fas fa-weight"></i> BMI Calculator</h2>
         <p style="text-align:center; color: var(--text-muted); margin-bottom: 2rem;">Check your Body Mass Index (BMI).</p>
         <form id="bmi-form">
           <div class="form-row">
@@ -56,14 +72,18 @@
           <button type="submit" class="btn btn-primary full-width">Calculate BMI</button>
         </form>
         <div id="bmi-results" class="hidden" style="margin-top: 2rem; text-align: center;">
-          <h3 style="font-size: 3rem; color: var(--primary-color);" id="res-bmi">--</h3>
-          <p id="res-category" style="color: var(--text-muted); font-size: 1.2rem;">--</p>
+          <div class="bmi-gauge">
+            <div class="gauge-bar"></div>
+            <div class="gauge-pointer" id="bmi-pointer"></div>
+          </div>
+          <h3 id="res-bmi" style="font-size: 3.5rem; color: var(--primary-color); margin: 1rem 0;">--</h3>
+          <p id="res-category" style="color: var(--text-muted); font-size: 1.3rem; font-weight: 600;">--</p>
         </div>
       </div>
 
       <!-- Calories Form -->
-      <div class="glass-card form-card">
-        <h2>Calorie & Macros Planner</h2>
+      <div class="glass-card form-card" data-aos="fade-left">
+        <h2><i class="fas fa-utensils"></i> Calorie & Macros Planner</h2>
         <p style="text-align:center; color: var(--text-muted); margin-bottom: 2rem;">Discover how much to eat to lose or gain weight.</p>
         <form id="cal-form">
           <div class="form-row">
@@ -135,18 +155,22 @@
 
   <!-- Foods Chart Section -->
   <section id="foods" class="foods-section">
-    <div class="section-title">
+    <div class="section-title" data-aos="fade-up">
       <h2>Food & Calories Chart</h2>
       <p>Compare healthy and unhealthy options easily.</p>
+      <div class="search-container glass" data-aos="fade-up" data-aos-delay="100" style="margin-top: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+        <i class="fas fa-search" style="margin-left: 1rem; color: var(--text-muted);"></i>
+        <input type="text" id="food-search" placeholder="Search for foods (e.g. apple, pizza)..." style="width: 100%; border: none; background: transparent; padding: 1rem; outline: none; font-size: 1rem;">
+      </div>
     </div>
     <div class="foods-container">
-      <div class="glass-card food-list healthy-list">
+      <div class="glass-card food-list healthy-list" data-aos="fade-up" data-aos-delay="200">
         <h3><span class="icon">🥗</span> Healthy Choices</h3>
         <ul id="healthy-items">
           <!-- Populated by JS -->
         </ul>
       </div>
-      <div class="glass-card food-list unhealthy-list">
+      <div class="glass-card food-list unhealthy-list" data-aos="fade-up" data-aos-delay="400">
         <h3><span class="icon">🍔</span> Unhealthy Cravings</h3>
         <ul id="unhealthy-items">
           <!-- Populated by JS -->
@@ -189,6 +213,11 @@
     </div>
   </div>
 
+  <!-- Floating Action Button -->
+  <a href="#home" class="fab glass"><i class="fas fa-chevron-up"></i></a>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script src="./js/app.js"></script>
 </body>
 </html>

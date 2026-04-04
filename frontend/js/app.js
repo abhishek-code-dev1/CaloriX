@@ -1,28 +1,28 @@
 // Constants
 const fallbackFoodsDB = {
   healthy: [
-    { id: 1, name: 'Apple', calories: 52, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/apple.jpg' },
-    { id: 2, name: 'Chicken Breast', calories: 165, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/chicken-breast.jpg' },
-    { id: 3, name: 'Oats', calories: 389, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/rolled-oats.jpg' },
-    { id: 4, name: 'Broccoli', calories: 34, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/broccoli.jpg' },
-    { id: 5, name: 'Salmon', calories: 208, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/salmon.jpg' },
-    { id: 6, name: 'Almonds', calories: 579, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/almonds.jpg' },
-    { id: 7, name: 'Spinach', calories: 23, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/spinach.jpg' },
-    { id: 8, name: 'Brown Rice', calories: 111, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=400' },
-    { id: 17, name: 'Avocado', calories: 160, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/avocado.jpg' },
-    { id: 18, name: 'Sweet Potato', calories: 86, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/sweet-potato.jpg' },
-    { id: 19, name: 'Greek Yogurt', calories: 59, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&q=80&w=400' },
-    { id: 20, name: 'Quinoa', calories: 120, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/quinoa.jpg' },
-    { id: 21, name: 'Banana', calories: 89, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/bananas.jpg' },
-    { id: 22, name: 'Orange', calories: 43, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/orange.jpg' },
-    { id: 23, name: 'Grapes', calories: 69, unit: '100g', category: 'healthy', image: 'https://loremflickr.com/400/400/grapes?lock=23' },
-    { id: 24, name: 'Watermelon', calories: 30, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/watermelon.jpg' },
-    { id: 25, name: 'Mango', calories: 60, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/mango.jpg' },
-    { id: 26, name: 'Eggs', calories: 155, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/egg.jpg' },
-    { id: 27, name: 'Lentils', calories: 116, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1708436478056-1872a208c010?auto=format&fit=crop&q=80&w=400' },
-    { id: 28, name: 'Carrot', calories: 41, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/carrots.jpg' },
-    { id: 29, name: 'Tomato', calories: 18, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/tomato.jpg' },
-    { id: 30, name: 'Cucumber', calories: 15, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/cucumber.jpg' }
+    { id: 1, name: 'Apple', calories: 52, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6bcdb?q=80&w=400' },
+    { id: 2, name: 'Chicken Breast', calories: 165, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?q=80&w=400' },
+    { id: 3, name: 'Oats', calories: 389, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1589333830171-ec5965415712?q=80&w=400' },
+    { id: 4, name: 'Broccoli', calories: 34, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1452960962294-51daf305908a?q=80&w=400' },
+    { id: 5, name: 'Salmon', calories: 208, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=400' },
+    { id: 6, name: 'Almonds', calories: 579, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1508061461508-cb18c242f556?q=80&w=400' },
+    { id: 7, name: 'Spinach', calories: 23, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?q=80&w=400' },
+    { id: 8, name: 'Brown Rice', calories: 111, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1586201327693-86619a7c3942?q=80&w=400' },
+    { id: 17, name: 'Avocado', calories: 160, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?q=80&w=400' },
+    { id: 18, name: 'Sweet Potato', calories: 86, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=400' },
+    { id: 19, name: 'Greek Yogurt', calories: 59, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?q=80&w=400' },
+    { id: 20, name: 'Quinoa', calories: 120, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1543332143-4e8c67e9dff1?q=80&w=400' },
+    { id: 21, name: 'Banana', calories: 89, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1603833665858-e61d17a86224?q=80&w=400' },
+    { id: 22, name: 'Orange', calories: 43, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1510137600163-2729bc6959a6?q=80&w=400' },
+    { id: 23, name: 'Grapes', calories: 69, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1537640538966-79f369b41f8f?q=80&w=400' },
+    { id: 24, name: 'Watermelon', calories: 30, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?q=80&w=400' },
+    { id: 25, name: 'Mango', calories: 60, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1553279768-865429fa0078?q=80&w=400' },
+    { id: 26, name: 'Eggs', calories: 155, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?q=80&w=400' },
+    { id: 27, name: 'Lentils', calories: 116, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1518173835740-f5d14111d76a?q=80&w=400' },
+    { id: 28, name: 'Carrot', calories: 41, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?q=80&w=400' },
+    { id: 29, name: 'Tomato', calories: 18, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?q=80&w=400' },
+    { id: 30, name: 'Cucumber', calories: 15, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1449339044511-d11bb99b9a4d?q=80&w=400' }
   ],
   unhealthy: [
     { id: 9, name: 'Cheeseburger', calories: 303, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=400' },
@@ -38,21 +38,21 @@ const fallbackFoodsDB = {
     { id: 33, name: 'Fried Chicken', calories: 320, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=400' },
     { id: 34, name: 'Nachos', calories: 346, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?q=80&w=400' },
     { id: 35, name: 'Hot Dog', calories: 290, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1541214113241-21578d2d9b62?q=80&w=400' },
-    { id: 36, name: 'Onion Rings', calories: 411, unit: '100g', category: 'unhealthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/onion-rings.jpg' },
+    { id: 36, name: 'Onion Rings', calories: 411, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1616422329720-6d43231fc751?q=80&w=400' },
     { id: 37, name: 'Brownie', calories: 466, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?q=80&w=400' },
     { id: 38, name: 'Cupcake', calories: 305, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?q=80&w=400' },
-    { id: 39, name: 'Bacon', calories: 541, unit: '100g', category: 'unhealthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/bacon.jpg' },
-    { id: 40, name: 'Cotton Candy', calories: 394, unit: '100g', category: 'unhealthy', image: 'https://spoonacular.com/cdn/ingredients_100x100/cotton-candy.jpg' }
+    { id: 39, name: 'Bacon', calories: 541, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1606851682841-84fe0f941810?q=80&w=400' },
+    { id: 40, name: 'Cotton Candy', calories: 394, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1628433355606-f77341031c51?q=80&w=400' }
   ]
 };
 
 // Constants
-const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-const API_BASE = isLocal ? 'http://localhost:3000/api' : 'https://calorix-vuq8.onrender.com/api';
+const API_BASE = '/api';
 
 // DOM Elements
 const authBtn = document.getElementById('auth-btn');
-const loginModal = document.getElementById('login-modal');
+const authModal = document.getElementById('auth-modal');
+const signupForm = document.getElementById('signup-form');
 const loginForm = document.getElementById('login-form');
 const feedbackForm = document.getElementById('feedback-form');
 
@@ -99,16 +99,20 @@ document.addEventListener('DOMContentLoaded', () => {
   if (mobileMenu) {
     mobileMenu.addEventListener('click', () => {
       navLinks.classList.toggle('active');
-      mobileMenu.querySelector('i').classList.toggle('fa-bars');
-      mobileMenu.querySelector('i').classList.toggle('fa-times');
+      document.body.classList.toggle('menu-open');
+      const icon = mobileMenu.querySelector('i');
+      icon.classList.toggle('fa-bars');
+      icon.classList.toggle('fa-times');
     });
 
     // Close menu when clicking links
     document.querySelectorAll('.nav-links a').forEach(link => {
       link.addEventListener('click', () => {
         navLinks.classList.remove('active');
-        mobileMenu.querySelector('i').classList.add('fa-bars');
-        mobileMenu.querySelector('i').classList.remove('fa-times');
+        document.body.classList.remove('menu-open');
+        const icon = mobileMenu.querySelector('i');
+        icon.classList.add('fa-bars');
+        icon.classList.remove('fa-times');
       });
     });
   }
@@ -291,20 +295,64 @@ function renderFoods(containerId, items) {
 }
 
 // Auth Handlers
-function openLoginModal() {
+function openAuthModal() {
   if (isLoggedIn) {
     isLoggedIn = false;
-    authBtn.textContent = 'Login';
+    authBtn.innerHTML = '<i class="fas fa-user-plus"></i> <span>Sign Up</span>';
     alert("Logged out successfully.");
     return;
   }
-  loginModal.classList.remove('hidden');
+  toggleAuth('signup'); // Default to signup as requested
+  authModal.classList.remove('hidden');
 }
 
-function closeLoginModal() {
-  loginModal.classList.add('hidden');
+function closeAuthModal() {
+  authModal.classList.add('hidden');
+  document.getElementById('signup-error').classList.add('hidden');
   document.getElementById('login-error').classList.add('hidden');
 }
+
+function toggleAuth(type) {
+  const signupCont = document.getElementById('signup-container');
+  const loginCont = document.getElementById('login-container');
+  if (type === 'signup') {
+    signupCont.classList.remove('hidden');
+    loginCont.classList.add('hidden');
+  } else {
+    signupCont.classList.add('hidden');
+    loginCont.classList.remove('hidden');
+  }
+}
+
+signupForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const user = document.getElementById('signup-user').value;
+  const pass = document.getElementById('signup-pass').value;
+
+  try {
+    const res = await fetch(`${API_BASE}/auth/register`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({username: user, password: pass})
+    });
+    const data = await res.json();
+    
+    if(res.ok) {
+      isLoggedIn = true;
+      authBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> <span>Logout</span>';
+      closeAuthModal();
+      celebrate();
+      alert(`Welcome to CaloriX, ${user}! Your account has been created.`);
+    } else {
+      const errorEl = document.getElementById('signup-error');
+      errorEl.innerText = data.error || "Registration failed.";
+      errorEl.classList.remove('hidden');
+    }
+  } catch(err) {
+    document.getElementById('signup-error').innerText = "Backend connection failed.";
+    document.getElementById('signup-error').classList.remove('hidden');
+  }
+});
 
 loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -317,13 +365,18 @@ loginForm.addEventListener('submit', async (e) => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({username: user, password: pass})
     });
+    const data = await res.json();
+
     if(res.ok) {
       isLoggedIn = true;
-      authBtn.textContent = 'Logout';
-      closeLoginModal();
+      authBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> <span>Logout</span>';
+      closeAuthModal();
+      celebrate();
       alert(`Welcome back, ${user}!`);
     } else {
-      document.getElementById('login-error').classList.remove('hidden');
+      const errorEl = document.getElementById('login-error');
+      errorEl.innerText = data.error || "Invalid credentials.";
+      errorEl.classList.remove('hidden');
     }
   } catch(err) {
     document.getElementById('login-error').innerText = "Backend connection failed.";

@@ -32,7 +32,7 @@
       <li><a href="#foods">Diet Chart</a></li>
     </ul>
     <div class="nav-actions">
-      <button id="auth-btn" class="btn btn-outline" onclick="openLoginModal()"><i class="fas fa-user-circle"></i> <span>Login</span></button>
+      <button id="auth-btn" class="btn btn-outline" onclick="openAuthModal()"><i class="fas fa-user-plus"></i> <span>Sign Up</span></button>
       <div class="menu-toggle" id="mobile-menu">
         <i class="fas fa-bars"></i>
       </div>
@@ -193,23 +193,58 @@
     <p>&copy; 2026 CaloriX App. Developed to help you reach your goals.</p>
   </footer>
 
-  <!-- Login Modal -->
-  <div id="login-modal" class="modal hidden">
-    <div class="modal-content glass-card">
-      <button class="close-btn" onclick="closeLoginModal()">&times;</button>
-      <h2>Login</h2>
-      <form id="login-form">
-        <div class="input-group">
-          <label>Username</label>
-          <input type="text" id="login-user" required>
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="modal hidden">
+    <div class="modal-content glass-card premium-auth">
+      <!-- Signup Form -->
+      <div id="signup-container">
+        <div class="auth-header">
+          <div class="auth-icon"><i class="fas fa-fire-alt"></i></div>
+          <h2>Create Account</h2>
+          <p>Join CaloriX and start your fitness journey today.</p>
         </div>
-        <div class="input-group">
-          <label>Password</label>
-          <input type="password" id="login-pass" required>
+        <form id="signup-form">
+          <div class="input-group">
+            <label><i class="fas fa-user"></i> Username</label>
+            <input type="text" id="signup-user" placeholder="Choose a unique username" required>
+          </div>
+          <div class="input-group">
+            <label><i class="fas fa-lock"></i> Password</label>
+            <input type="password" id="signup-pass" placeholder="Create a unique password" required>
+          </div>
+          <button type="submit" class="btn btn-primary full-width">Get Started <i class="fas fa-arrow-right"></i></button>
+        </form>
+        <p id="signup-error" class="error-msg hidden">Something went wrong. Please try again.</p>
+        <div class="auth-footer">
+          <p>Already have an account? <a href="#" onclick="toggleAuth('login')" style="color: var(--primary-color); font-weight: 600;">Sign In</a></p>
         </div>
-        <button type="submit" class="btn btn-primary full-width">Sign In</button>
-      </form>
-      <p id="login-error" class="error-msg hidden">Invalid credentials</p>
+      </div>
+
+      <!-- Login Form (Hidden by default) -->
+      <div id="login-container" class="hidden">
+        <div class="auth-header">
+          <div class="auth-icon"><i class="fas fa-user-circle"></i></div>
+          <h2>Welcome Back</h2>
+          <p>Login to track your progress.</p>
+        </div>
+        <form id="login-form">
+          <div class="input-group">
+            <label><i class="fas fa-user"></i> Username</label>
+            <input type="text" id="login-user" required>
+          </div>
+          <div class="input-group">
+            <label><i class="fas fa-lock"></i> Password</label>
+            <input type="password" id="login-pass" required>
+          </div>
+          <button type="submit" class="btn btn-primary full-width">Sign In</button>
+        </form>
+        <p id="login-error" class="error-msg hidden">Invalid credentials</p>
+        <div class="auth-footer">
+          <p>Don't have an account? <a href="#" onclick="toggleAuth('signup')" style="color: var(--primary-color); font-weight: 600;">Register Now</a></p>
+        </div>
+      </div>
+
+      <button class="close-btn" onclick="closeAuthModal()">&times;</button>
     </div>
   </div>
 

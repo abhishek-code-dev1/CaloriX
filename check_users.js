@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 require('dotenv').config({ path: './backend/.env' });
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/fittrack';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017';
 
 const UserSchema = new mongoose.Schema({
   username: String,

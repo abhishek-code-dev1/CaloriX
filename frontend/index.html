@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="./styles/main.css">
 </head>
+
 <body>
 
 
@@ -25,15 +27,15 @@
 
   <!-- Navbar -->
   <nav class="navbar glass">
-    <div class="logo"><i class="fas fa-fire-alt" style="color: var(--primary-color); margin-right: 10px;"></i>Calori<span>X</span></div>
+    <div class="logo"><i class="fas fa-fire-alt"
+        style="color: var(--primary-color); margin-right: 10px;"></i>Calori<span>X</span></div>
     <ul class="nav-links" id="nav-links">
       <li><a href="#home">Home</a></li>
       <li><a href="#calculator">Calculator</a></li>
       <li><a href="#foods">Diet Chart</a></li>
     </ul>
     <div class="nav-actions">
-      <button id="auth-btn" class="btn btn-outline" onclick="openAuthModal()"><i class="fas fa-user-plus"></i> <span>Sign Up</span></button>
-      <div class="menu-toggle" id="mobile-menu">
+      <div class="menu-toggle" id="mobile-menu" style="display: block;">
         <i class="fas fa-bars"></i>
       </div>
     </div>
@@ -43,7 +45,8 @@
   <section id="home" class="hero">
     <div class="hero-content" data-aos="zoom-out" data-aos-duration="1200">
       <h1 class="animate-up">Achieve Your <span>Dream Physique</span></h1>
-      <p class="animate-up delay-1">Measure your weight relative to height, calculate precise caloric needs for cutting, bulking, or maintenance, and discover the best foods.</p>
+      <p class="animate-up delay-1">Measure your weight relative to height, calculate precise caloric needs for cutting,
+        bulking, or maintenance, and discover the best foods.</p>
       <div class="hero-btns animate-up delay-2">
         <a href="#calculator" class="btn btn-primary">Start Your Journey <i class="fas fa-arrow-right"></i></a>
       </div>
@@ -53,11 +56,12 @@
   <!-- App Form Section -->
   <section id="calculator" class="calculator-section">
     <div class="calculators-container">
-      
+
       <!-- BMI Form -->
       <div class="glass-card form-card" data-aos="fade-right">
         <h2><i class="fas fa-weight"></i> BMI Calculator</h2>
-        <p style="text-align:center; color: var(--text-muted); margin-bottom: 2rem;">Check your Body Mass Index (BMI).</p>
+        <p style="text-align:center; color: var(--text-muted); margin-bottom: 2rem;">Check your Body Mass Index (BMI).
+        </p>
         <form id="bmi-form">
           <div class="form-row">
             <div class="input-group">
@@ -84,7 +88,8 @@
       <!-- Calories Form -->
       <div class="glass-card form-card" data-aos="fade-left">
         <h2><i class="fas fa-utensils"></i> Calorie & Macros Planner</h2>
-        <p style="text-align:center; color: var(--text-muted); margin-bottom: 2rem;">Discover how much to eat to lose or gain weight.</p>
+        <p style="text-align:center; color: var(--text-muted); margin-bottom: 2rem;">Discover how much to eat to lose or
+          gain weight.</p>
         <form id="cal-form">
           <div class="form-row">
             <div class="input-group">
@@ -113,11 +118,11 @@
             <div class="input-group">
               <label>Activity Level</label>
               <select id="cal-activity" required>
-                 <option value="sedentary">Sedentary (Little/no exercise)</option>
-                 <option value="light">Light (1-3 days/week)</option>
-                 <option value="moderate">Moderate (3-5 days/week)</option>
-                 <option value="active">Active (6-7 days/week)</option>
-                 <option value="veryActive">Very Active (Twice daily)</option>
+                <option value="sedentary">Sedentary (Little/no exercise)</option>
+                <option value="light">Light (1-3 days/week)</option>
+                <option value="moderate">Moderate (3-5 days/week)</option>
+                <option value="active">Active (6-7 days/week)</option>
+                <option value="veryActive">Very Active (Twice daily)</option>
               </select>
             </div>
             <div class="input-group">
@@ -131,7 +136,7 @@
           </div>
           <button type="submit" class="btn btn-primary full-width">Calculate Calories</button>
         </form>
-        
+
         <!-- Results Display -->
         <div id="cal-results" class="hidden" style="margin-top: 2rem;">
           <div class="result-grid">
@@ -149,7 +154,7 @@
           <p id="res-recommendation" class="recommendation-text" style="text-align: center; margin-top: 1rem;"></p>
         </div>
       </div>
-    
+
     </div>
   </section>
 
@@ -158,9 +163,11 @@
     <div class="section-title" data-aos="fade-up">
       <h2>Food & Calories Chart</h2>
       <p>Compare healthy and unhealthy options easily.</p>
-      <div class="search-container glass" data-aos="fade-up" data-aos-delay="100" style="margin-top: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+      <div class="search-container glass" data-aos="fade-up" data-aos-delay="100"
+        style="margin-top: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
         <i class="fas fa-search" style="margin-left: 1rem; color: var(--text-muted);"></i>
-        <input type="text" id="food-search" placeholder="Search for foods (e.g. apple, pizza)..." style="width: 100%; border: none; background: transparent; padding: 1rem; outline: none; font-size: 1rem;">
+        <input type="text" id="food-search" placeholder="Search for foods (e.g. apple, pizza)..."
+          style="width: 100%; border: none; background: transparent; padding: 1rem; outline: none; font-size: 1rem;">
       </div>
     </div>
     <div class="foods-container">
@@ -212,11 +219,13 @@
             <label><i class="fas fa-lock"></i> Password</label>
             <input type="password" id="signup-pass" placeholder="Create a unique password" required>
           </div>
-          <button type="submit" class="btn btn-primary full-width">Get Started <i class="fas fa-arrow-right"></i></button>
+          <button type="submit" class="btn btn-primary full-width">Get Started <i
+              class="fas fa-arrow-right"></i></button>
         </form>
         <p id="signup-error" class="error-msg hidden">Something went wrong. Please try again.</p>
         <div class="auth-footer">
-          <p>Already have an account? <a href="#" onclick="toggleAuth('login')" style="color: var(--primary-color); font-weight: 600;">Sign In</a></p>
+          <p>Already have an account? <a href="#" onclick="toggleAuth('login')"
+              style="color: var(--primary-color); font-weight: 600;">Sign In</a></p>
         </div>
       </div>
 
@@ -240,7 +249,8 @@
         </form>
         <p id="login-error" class="error-msg hidden">Invalid credentials</p>
         <div class="auth-footer">
-          <p>Don't have an account? <a href="#" onclick="toggleAuth('signup')" style="color: var(--primary-color); font-weight: 600;">Register Now</a></p>
+          <p>Don't have an account? <a href="#" onclick="toggleAuth('signup')"
+              style="color: var(--primary-color); font-weight: 600;">Register Now</a></p>
         </div>
       </div>
 
@@ -255,4 +265,5 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script src="./js/app.js"></script>
 </body>
+
 </html>

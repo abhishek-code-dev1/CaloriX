@@ -1,68 +1,34 @@
 // Constants
 const fallbackFoodsDB = {
   healthy: [
-    { id: 1, name: 'Apple', calories: 52, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/apple.jpg' },
-    { id: 2, name: 'Chicken Breast', calories: 165, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/chicken-breast.jpg' },
-    { id: 3, name: 'Oats', calories: 389, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/rolled-oats.jpg' },
-    { id: 4, name: 'Broccoli', calories: 34, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/broccoli.jpg' },
-    { id: 5, name: 'Salmon', calories: 208, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/salmon.jpg' },
-    { id: 6, name: 'Almonds', calories: 579, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/almonds.jpg' },
-    { id: 7, name: 'Spinach', calories: 23, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/spinach.jpg' },
-    { id: 8, name: 'Brown Rice', calories: 111, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1680137248876-6ad53db8caef?auto=format&fit=crop&w=500&q=80' },
-    { id: 17, name: 'Avocado', calories: 160, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/avocado.jpg' },
-    { id: 18, name: 'Sweet Potato', calories: 86, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/sweet-potato.jpg' },
-    { id: 19, name: 'Greek Yogurt', calories: 59, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/plain-yogurt.jpg' },
-    { id: 20, name: 'Quinoa', calories: 120, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/quinoa.jpg' },
-    { id: 21, name: 'Banana', calories: 89, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/bananas.jpg' },
-    { id: 22, name: 'Orange', calories: 43, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/orange.jpg' },
-    { id: 23, name: 'Grapes', calories: 69, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1596363505729-4190a9506133?auto=format&fit=crop&w=500&q=80' },
-    { id: 24, name: 'Watermelon', calories: 30, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/watermelon.jpg' },
-    { id: 25, name: 'Mango', calories: 60, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/mango.jpg' },
-    { id: 26, name: 'Eggs', calories: 155, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/egg.jpg' },
-    { id: 27, name: 'Lentils', calories: 116, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1552585960-0e1069ce7405?auto=format&fit=crop&w=500&q=80' },
-    { id: 28, name: 'Carrot', calories: 41, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/carrots.jpg' },
-    { id: 29, name: 'Tomato', calories: 18, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/tomato.jpg' },
-    { id: 30, name: 'Cucumber', calories: 15, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/cucumber.jpg' },
-    { id: 41, name: 'Blueberries', calories: 57, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/blueberries.jpg' },
-    { id: 42, name: 'Tofu', calories: 76, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/tofu.jpg' },
-    { id: 43, name: 'Walnuts', calories: 654, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/walnuts.jpg' },
-    { id: 44, name: 'Olive Oil', calories: 884, unit: '100ml', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/olive-oil.jpg' },
-    { id: 45, name: 'Bell Pepper', calories: 31, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/red-bell-pepper.jpg' },
-    { id: 46, name: 'Asparagus', calories: 20, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/asparagus.jpg' },
-    { id: 47, name: 'Pineapple', calories: 50, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/pineapple.jpg' },
-    { id: 48, name: 'Kale', calories: 49, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/kale.jpg' },
-    { id: 49, name: 'Tuna', calories: 132, unit: '100g', category: 'healthy', image: 'https://images.unsplash.com/photo-1710106687822-999dbeb73dee?auto=format&fit=crop&w=500&q=80' },
-    { id: 50, name: 'Garlic', calories: 149, unit: '100g', category: 'healthy', image: 'https://spoonacular.com/cdn/ingredients_500x500/garlic.jpg' }
+    { id: 1, name: 'Apple', calories: 52, unit: '100g', category: 'healthy', price: 20, budget: 'economy', meals: ['snack', 'breakfast'], dietType: 'veg', image: 'https://spoonacular.com/cdn/ingredients_500x500/apple.jpg' },
+    { id: 2, name: 'Chicken Breast', calories: 165, unit: '100g', category: 'healthy', price: 60, budget: 'standard', meals: ['lunch', 'dinner'], dietType: 'non-veg', image: 'https://spoonacular.com/cdn/ingredients_500x500/chicken-breast.jpg' },
+    { id: 3, name: 'Oats', calories: 389, unit: '100g', category: 'healthy', price: 30, budget: 'economy', meals: ['breakfast'], dietType: 'veg', image: 'https://spoonacular.com/cdn/ingredients_500x500/rolled-oats.jpg' },
+    { id: 4, name: 'Broccoli', calories: 34, unit: '100g', category: 'healthy', price: 40, budget: 'economy', meals: ['lunch', 'dinner'], dietType: 'veg', image: 'https://spoonacular.com/cdn/ingredients_500x500/broccoli.jpg' },
+    { id: 5, name: 'Salmon', calories: 208, unit: '100g', category: 'healthy', price: 250, budget: 'premium', meals: ['lunch', 'dinner'], dietType: 'non-veg', image: 'https://spoonacular.com/cdn/ingredients_500x500/salmon.jpg' },
+    { id: 6, name: 'Almonds', calories: 579, unit: '100g', category: 'healthy', price: 120, budget: 'standard', meals: ['snack'], dietType: 'veg', image: 'https://spoonacular.com/cdn/ingredients_500x500/almonds.jpg' },
+    { id: 7, name: 'Spinach', calories: 23, unit: '100g', category: 'healthy', price: 15, budget: 'economy', meals: ['lunch', 'dinner'], dietType: 'veg', image: 'https://spoonacular.com/cdn/ingredients_500x500/spinach.jpg' },
+    { id: 8, name: 'Brown Rice', calories: 111, unit: '100g', category: 'healthy', price: 45, budget: 'economy', meals: ['lunch', 'dinner'], dietType: 'veg', image: 'https://images.unsplash.com/photo-1680137248876-6ad53db8caef?auto=format&fit=crop&w=500&q=80' },
+    { id: 17, name: 'Avocado', calories: 160, unit: '100g', category: 'healthy', price: 180, budget: 'premium', meals: ['breakfast', 'snack'], dietType: 'veg', image: 'https://spoonacular.com/cdn/ingredients_500x500/avocado.jpg' },
+    { id: 18, name: 'Sweet Potato', calories: 86, unit: '100g', category: 'healthy', price: 35, budget: 'economy', meals: ['lunch', 'snack'], dietType: 'veg', image: 'https://spoonacular.com/cdn/ingredients_500x500/sweet-potato.jpg' },
+    { id: 19, name: 'Greek Yogurt', calories: 59, unit: '100g', category: 'healthy', price: 90, budget: 'standard', meals: ['breakfast', 'snack'], dietType: 'veg', image: 'https://spoonacular.com/cdn/ingredients_500x500/plain-yogurt.jpg' },
+    { id: 20, name: 'Quinoa', calories: 120, unit: '100g', category: 'healthy', price: 110, budget: 'standard', meals: ['lunch', 'dinner'], dietType: 'veg', image: 'https://spoonacular.com/cdn/ingredients_500x500/quinoa.jpg' },
+    { id: 21, name: 'Banana', calories: 89, unit: '100g', category: 'healthy', price: 10, budget: 'economy', meals: ['breakfast', 'snack'], dietType: 'veg', image: 'https://spoonacular.com/cdn/ingredients_500x500/bananas.jpg' },
+    { id: 22, name: 'Orange', calories: 43, unit: '100g', category: 'healthy', price: 25, budget: 'economy', meals: ['snack'], dietType: 'veg', image: 'https://spoonacular.com/cdn/ingredients_500x500/orange.jpg' },
+    { id: 26, name: 'Eggs', calories: 155, unit: '100g', category: 'healthy', price: 50, budget: 'economy', meals: ['breakfast', 'dinner'], dietType: 'non-veg', image: 'https://spoonacular.com/cdn/ingredients_500x500/egg.jpg' },
+    { id: 27, name: 'Lentils', calories: 116, unit: '100g', category: 'healthy', price: 40, budget: 'economy', meals: ['lunch', 'dinner'], dietType: 'veg', image: 'https://images.unsplash.com/photo-1552585960-0e1069ce7405?auto=format&fit=crop&w=500&q=80' },
+    { id: 28, name: 'Carrot', calories: 41, unit: '100g', category: 'healthy', price: 20, budget: 'economy', meals: ['snack', 'lunch'], dietType: 'veg', image: 'https://spoonacular.com/cdn/ingredients_500x500/carrots.jpg' },
+    { id: 41, name: 'Blueberries', calories: 57, unit: '100g', category: 'healthy', price: 300, budget: 'premium', meals: ['breakfast', 'snack'], dietType: 'veg', image: 'https://spoonacular.com/cdn/ingredients_500x500/blueberries.jpg' },
+    { id: 42, name: 'Tofu', calories: 76, unit: '100g', category: 'healthy', price: 70, budget: 'standard', meals: ['lunch', 'dinner'], dietType: 'veg', image: 'https://spoonacular.com/cdn/ingredients_500x500/tofu.jpg' },
+    { id: 43, name: 'Walnuts', calories: 654, unit: '100g', category: 'healthy', price: 200, budget: 'premium', meals: ['snack'], dietType: 'veg', image: 'https://spoonacular.com/cdn/ingredients_500x500/walnuts.jpg' },
+    { id: 44, name: 'Olive Oil', calories: 884, unit: '100ml', category: 'healthy', price: 150, budget: 'standard', meals: ['lunch', 'dinner'], dietType: 'veg', image: 'https://spoonacular.com/cdn/ingredients_500x500/olive-oil.jpg' },
+    { id: 49, name: 'Tuna', calories: 132, unit: '100g', category: 'healthy', price: 140, budget: 'standard', meals: ['lunch', 'dinner'], dietType: 'non-veg', image: 'https://images.unsplash.com/photo-1710106687822-999dbeb73dee?auto=format&fit=crop&w=500&q=80' }
   ],
   unhealthy: [
-    { id: 9, name: 'Cheeseburger', calories: 303, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=400' },
-    { id: 10, name: 'French Fries', calories: 312, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?q=80&w=400' },
-    { id: 11, name: 'Donut', calories: 452, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?q=80&w=400' },
-    { id: 12, name: 'Soda', calories: 41, unit: '100ml', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?q=80&w=400' },
-    { id: 13, name: 'Pizza', calories: 266, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=400' },
-    { id: 14, name: 'Potato Chips', calories: 536, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?q=80&w=400' },
-    { id: 15, name: 'Ice Cream', calories: 207, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?q=80&w=400' },
-    { id: 16, name: 'Candies', calories: 394, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?q=80&w=400' },
-    { id: 31, name: 'Chocolate Bar', calories: 210, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1511381939415-e44015466834?q=80&w=400' },
-    { id: 32, name: 'Milkshake', calories: 350, unit: '100ml', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?q=80&w=400' },
-    { id: 33, name: 'Fried Chicken', calories: 320, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=400' },
-    { id: 34, name: 'Nachos', calories: 346, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?q=80&w=400' },
-    { id: 35, name: 'Hot Dog', calories: 290, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1541214113241-21578d2d9b62?q=80&w=400' },
-    { id: 36, name: 'Onion Rings', calories: 411, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1639024471283-03518883512d?auto=format&fit=crop&w=500&q=80' },
-    { id: 37, name: 'Brownie', calories: 466, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?q=80&w=400' },
-    { id: 38, name: 'Cupcake', calories: 305, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?q=80&w=400' },
-    { id: 39, name: 'Bacon', calories: 541, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1694983361629-0363ab0d1b49?auto=format&fit=crop&w=500&q=80' },
-    { id: 40, name: 'Cotton Candy', calories: 394, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1693122070191-277d7274cf46?auto=format&fit=crop&w=500&q=80' },
-    { id: 51, name: 'Pancakes', calories: 227, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?q=80&w=400' },
-    { id: 52, name: 'Waffles', calories: 291, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1568051243851-f9b136146e97?auto=format&fit=crop&w=500&q=80' },
-    { id: 53, name: 'Cake', calories: 257, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=400' },
-    { id: 54, name: 'Cookies', calories: 502, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?q=80&w=400' },
-    { id: 55, name: 'Fried Rice', calories: 163, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?q=80&w=400' },
-    { id: 56, name: 'White Bread', calories: 265, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=400' },
-    { id: 57, name: 'Tacos', calories: 226, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=400' },
-    { id: 58, name: 'Chicken Wings', calories: 203, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1527477396000-e27163b481c2?q=80&w=400' },
-    { id: 59, name: 'Popcorn', calories: 375, unit: '100g', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1585647347384-2593bc35786b?q=80&w=400' },
-    { id: 60, name: 'Beer', calories: 43, unit: '100ml', category: 'unhealthy', image: 'https://images.unsplash.com/photo-1535958636474-b021ee887b13?q=80&w=400' }
+    { id: 9, name: 'Cheeseburger', calories: 303, unit: '100g', category: 'unhealthy', price: 150, budget: 'standard', meals: ['lunch', 'dinner'], dietType: 'non-veg', image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=400' },
+    { id: 10, name: 'French Fries', calories: 312, unit: '100g', category: 'unhealthy', price: 80, budget: 'economy', meals: ['snack'], dietType: 'veg', image: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?q=80&w=400' },
+    { id: 13, name: 'Pizza', calories: 266, unit: '100g', category: 'unhealthy', price: 400, budget: 'premium', meals: ['lunch', 'dinner'], dietType: 'veg', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=400' },
+    { id: 33, name: 'Fried Chicken', calories: 320, unit: '100g', category: 'unhealthy', price: 250, budget: 'premium', meals: ['lunch', 'dinner'], dietType: 'non-veg', image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=400' }
   ]
 };
 
@@ -138,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   fetchFoods();
+  initDietPlanner();
 });
 
 // Celebration Effect
@@ -239,6 +206,12 @@ calForm.addEventListener('submit', async (e) => {
     document.getElementById('res-target').innerText = targetCalories;
     document.getElementById('res-recommendation').innerText = recommendation;
     document.getElementById('cal-results').classList.remove('hidden');
+    
+    // Auto-scroll to results
+    document.getElementById('cal-results').scrollIntoView({ behavior: 'smooth' });
+    
+    // Sync diet filters
+    document.getElementById('diet-goal-filter').value = goal;
   };
 
   try {
@@ -253,7 +226,8 @@ calForm.addEventListener('submit', async (e) => {
       document.getElementById('res-target').innerText = data.targetCalories;
       document.getElementById('res-recommendation').innerText = data.recommendation;
       document.getElementById('cal-results').classList.remove('hidden');
-      celebrate(); // Celeb on success
+      document.getElementById('diet-goal-filter').value = goal;
+      celebrate(); 
     } else {
       handleLocalCalories();
     }
@@ -262,6 +236,105 @@ calForm.addEventListener('submit', async (e) => {
     handleLocalCalories();
   }
 });
+
+// Diet Planner Logic
+function initDietPlanner() {
+  const generateBtn = document.getElementById('generate-diet-btn');
+  const budgetFilter = document.getElementById('diet-budget-filter');
+  const dietTypeFilter = document.getElementById('diet-type-filter');
+  const goalFilter = document.getElementById('diet-goal-filter');
+
+  generateBtn.addEventListener('click', () => {
+    const dietSection = document.getElementById('diet-plan');
+    dietSection.classList.remove('hidden');
+    generateDietPlan();
+    dietSection.scrollIntoView({ behavior: 'smooth' });
+    celebrate();
+  });
+
+  budgetFilter.addEventListener('change', generateDietPlan);
+  dietTypeFilter.addEventListener('change', generateDietPlan);
+  goalFilter.addEventListener('change', generateDietPlan);
+}
+
+function generateDietPlan() {
+  const budget = document.getElementById('diet-budget-filter').value;
+  const dietType = document.getElementById('diet-type-filter').value;
+  const goal = document.getElementById('diet-goal-filter').value;
+  const targetCal = parseInt(document.getElementById('res-target').innerText) || 2000;
+  
+  const mealDistribution = {
+    breakfast: 0.25,
+    lunch: 0.35,
+    snack: 0.15,
+    dinner: 0.25
+  };
+
+  let totalCalFinal = 0;
+  let totalCostFinal = 0;
+
+  ['breakfast', 'lunch', 'snack', 'dinner'].forEach(mealType => {
+    const container = document.getElementById(`${mealType}-items`);
+    container.innerHTML = '';
+    
+    const mealTarget = targetCal * mealDistribution[mealType];
+    
+    // Filter potential foods
+    let availableFoods = [...allFoods.healthy];
+    
+    // If bulking, allow some "unhealthy" but energy-dense options
+    if (goal === 'bulk') {
+      availableFoods = [...availableFoods, ...allFoods.unhealthy];
+    }
+
+    let filtered = availableFoods.filter(f => f.meals && f.meals.includes(mealType));
+    
+    // Diet preference filter
+    if (dietType !== 'all') {
+      filtered = filtered.filter(f => f.dietType === dietType);
+    }
+    
+    // fall back if no specialized meal data exists (standard backends)
+    if (filtered.length === 0) {
+      filtered = availableFoods.slice(0, 5); // generic fallback
+    }
+
+    // Budget filter
+    if (budget !== 'all' && filtered.some(f => f.budget)) {
+      const budgetMatched = filtered.filter(f => f.budget === budget);
+      if (budgetMatched.length > 0) filtered = budgetMatched;
+    }
+
+    // Pick items for variety
+    const selection = filtered.sort(() => 0.5 - Math.random()).slice(0, 2);
+    
+    selection.forEach(item => {
+      // Calculate portion to match calories
+      const portionRatio = (mealTarget / selection.length) / (item.calories || 100);
+      const amount = Math.round(100 * portionRatio);
+      const itemCost = Math.round(((item.price || 50) / 100) * amount);
+      const itemCal = Math.round((item.calories || 100) * portionRatio);
+
+      totalCalFinal += itemCal;
+      totalCostFinal += itemCost;
+
+      const itemEl = document.createElement('div');
+      itemEl.className = 'meal-suggestion-item reveal-up';
+      itemEl.innerHTML = `
+        <img src="${item.image}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1490818387583-1baba5e638af?q=80&w=100'">
+        <div class="meal-item-data">
+          <span class="meal-item-name">${item.name}</span>
+          <span class="meal-item-meta">${amount}g | ${itemCal} kcal</span>
+        </div>
+        <span class="meal-item-price">₹${itemCost}</span>
+      `;
+      container.appendChild(itemEl);
+    });
+  });
+
+  document.getElementById('diet-total-cal').innerText = `${Math.round(totalCalFinal)} kcal`;
+  document.getElementById('diet-total-cost').innerText = `₹${Math.round(totalCostFinal)}`;
+}
 
 // Fetch Foods Data
 async function fetchFoods() {

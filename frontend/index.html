@@ -32,7 +32,7 @@
     <ul class="nav-links" id="nav-links">
       <li><a href="#home">Home</a></li>
       <li><a href="#calculator">Calculator</a></li>
-      <li><a href="#diet-plan">Diet Plan</a></li>
+      <li><a href="#calculator">Diet Plan</a></li>
       <li><a href="#foods">Foods Chart</a></li>
     </ul>
     <div class="nav-actions">
@@ -154,7 +154,8 @@
           </div>
           <p id="res-recommendation" class="recommendation-text" style="text-align: center; margin-top: 1rem;"></p>
           <div style="text-align: center; margin-top: 2rem;">
-            <button id="generate-diet-btn" class="btn btn-primary">Generate My Diet Plan <i class="fas fa-magic"></i></button>
+            <button id="generate-diet-btn" class="btn btn-primary">Generate My Diet Plan <i
+                class="fas fa-magic"></i></button>
           </div>
         </div>
       </div>
@@ -162,71 +163,7 @@
     </div>
   </section>
 
-  <!-- Diet Suggestion Section -->
-  <section id="diet-plan" class="diet-section hidden">
-    <div class="section-title" data-aos="fade-up">
-      <h2>Your Personalized <span>Diet Plan</span></h2>
-      <p>Tailored food suggestions based on your caloric needs and budget.</p>
-    </div>
-
-    <div class="diet-filters glass-card" data-aos="fade-up">
-      <div class="filter-group">
-        <label><i class="fas fa-wallet"></i> Budget Profile</label>
-        <select id="diet-budget-filter">
-          <option value="all">Any Budget</option>
-          <option value="economy">Economy (Low Cost)</option>
-          <option value="standard">Standard (Moderate)</option>
-          <option value="premium">Premium (Gourmet)</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label><i class="fas fa-leaf"></i> Diet Preference</label>
-        <select id="diet-type-filter">
-          <option value="all">Any Preference</option>
-          <option value="veg">Vegetarian</option>
-          <option value="non-veg">Non-Vegetarian</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label><i class="fas fa-filter"></i> Goal Preference</label>
-        <select id="diet-goal-filter">
-          <option value="maintain">Maintain Weight</option>
-          <option value="cut">Fat Loss</option>
-          <option value="bulk">Muscle Gain</option>
-        </select>
-      </div>
-      <div class="diet-summary-mini">
-        <div class="mini-stat">
-          <span class="label">Total Calories</span>
-          <span id="diet-total-cal">0 kcal</span>
-        </div>
-        <div class="mini-stat">
-          <span class="label">Est. Daily Cost</span>
-          <span id="diet-total-cost">₹0</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="diet-grid" id="diet-grid">
-      <!-- Meal Cards will be injected here -->
-      <div class="meal-card glass-card" data-aos="fade-up">
-        <h3><i class="fas fa-coffee"></i> Breakfast</h3>
-        <div class="meal-items" id="breakfast-items"></div>
-      </div>
-      <div class="meal-card glass-card" data-aos="fade-up" data-aos-delay="100">
-        <h3><i class="fas fa-sun"></i> Lunch</h3>
-        <div class="meal-items" id="lunch-items"></div>
-      </div>
-      <div class="meal-card glass-card" data-aos="fade-up" data-aos-delay="200">
-        <h3><i class="fas fa-apple-alt"></i> Snacks</h3>
-        <div class="meal-items" id="snack-items"></div>
-      </div>
-      <div class="meal-card glass-card" data-aos="fade-up" data-aos-delay="300">
-        <h3><i class="fas fa-moon"></i> Dinner</h3>
-        <div class="meal-items" id="dinner-items"></div>
-      </div>
-    </div>
-  </section>
+  <!-- Diet Section Removed - Saarthi AI handles this now -->
 
   <!-- Foods Chart Section -->
   <section id="foods" class="foods-section">
@@ -328,11 +265,12 @@
     </div>
   </div>
 
-  <!-- Floating Action Button -->
-  <a href="#home" class="fab glass"><i class="fas fa-chevron-up"></i></a>
-
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Botpress AI Integration (Saarthi) -->
+  <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
+  <script src="https://files.bpcontent.cloud/2026/04/07/09/20260407094033-A729FR64.js" defer></script>
+
   <script src="./js/app.js"></script>
 </body>
 

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-require('dotenv').config({ path: './backend/.env' });
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, 'backend/.env') });
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017';
 

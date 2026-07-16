@@ -19,6 +19,12 @@ const JWT_SECRET = process.env.JWT_SECRET || 'secretkey123';
 mongoose.connect(MONGO_URI)
   .then(async () => {
     console.log("Connected to MongoDB established ✅");
+    try {
+      await User.collection.dropIndex("passwordToken_1");
+      console.log("Unique index on passwordToken dropped successfully ✅");
+    } catch (e) {
+      console.log("Unique index check: already cleaned up or not present.");
+    }
     await seedDB();
   })
   .catch((err) => console.error("Could not connect to MongoDB ❌", err));
@@ -300,11 +306,6 @@ app.post('/api/auth/register', async (req, res) => {
     if (existingUser) return res.status(400).json({ error: "Email already taken." });
 
     const passwordToken = crypto.createHash('sha256').update(password).digest('hex');
-    const duplicatedPass = await User.findOne({ passwordToken });
-    if (duplicatedPass) {
-      return res.status(400).json({ error: "This password has already been used by another user. Choose a unique password." });
-    }
-
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
       username,
@@ -425,11 +426,6 @@ app.post('/api/auth/reset', async (req, res) => {
     }
 
     const passwordToken = crypto.createHash('sha256').update(newPassword).digest('hex');
-    const duplicatedPass = await User.findOne({ passwordToken, _id: { $ne: user._id } });
-    if (duplicatedPass) {
-      return res.status(400).json({ error: "This password has already been used by another user. Choose a unique password." });
-    }
-
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     user.passwordToken = passwordToken;

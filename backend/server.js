@@ -1,75 +1,51 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
-const User = require('./models/User');
-const Food = require('./models/Food');
-
 const app = express();
 let PORT = parseInt(process.env.PORT) || 3000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/calorix';
 const JWT_SECRET = process.env.JWT_SECRET || 'secretkey123';
 
-// MongoDB Connection with Auto-Fallback
-function connectDB(uri) {
-  mongoose.connect(uri)
-    .then(() => {
-      console.log(`Connected to MongoDB established ✅ (${uri.includes('+srv') ? 'Atlas Cloud' : 'Local Fallback'})`);
-    })
-    .catch((err) => {
-      console.error(`Could not connect to MongoDB ❌ (${uri.includes('+srv') ? 'Atlas Cloud' : 'Local Fallback'})`, err.message);
-      if (uri !== 'mongodb://localhost:27017/calorix') {
-        console.log("Attempting local database connection fallback...");
-        connectDB('mongodb://localhost:27017/calorix');
-      }
-    });
+// In-Memory Data Storage (No MongoDB database connection required!)
+const usersStore = [];
+let foodsStore = [];
+
+function seedDB() {
+  console.log("CRITICAL SYNC: Re-seeding in-memory database...");
+  foodsStore = [...foodsDB.healthy, ...foodsDB.unhealthy];
+  console.log(`CRITICAL SYNC: ${foodsStore.length} items successfully loaded! 🌱`);
 }
 
-// Perform unique index cleanup once mongoose connection is fully opened and initialized
-mongoose.connection.once('open', async () => {
-  try {
-    const indexes = await User.collection.indexes();
-    for (const index of indexes) {
-      if (index.key && index.key.passwordToken) {
-        console.log(`Dropping unique index ${index.name} on passwordToken...`);
-        await User.collection.dropIndex(index.name);
-      }
-    }
-    console.log("Database index audit completed successfully ✅");
-  } catch (err) {
-    console.log("Database index cleanup check:", err.message);
+app.use(cors());
+
+// Simple cookie parsing middleware
+app.use((req, res, next) => {
+  req.cookies = {};
+  if (req.headers.cookie) {
+    req.headers.cookie.split(';').forEach(cookie => {
+      const parts = cookie.split('=');
+      req.cookies[parts.shift().trim()] = decodeURIComponent(parts.join('='));
+    });
   }
-  
-  // Seed the DB
-  await seedDB();
+  next();
 });
 
-connectDB(MONGO_URI);
-
-async function seedDB() {
+// Auth Middleware
+function requireAuth(req, res, next) {
+  const token = req.cookies && req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ error: "Authentication required" });
+  }
   try {
-    // Erase all user data for a fresh start
-    console.log("CRITICAL SYNC: Erasing all registered user accounts...");
-    await User.deleteMany({});
-
-    // Auto-cleanup unwanted items
-    const namesToRemove = ['Cottage Cheese', 'Pomegranate', 'Kiwi', 'Chia Seeds', 'Hummus', 'Energy Drink', 'Baklava', 'Pancakes', 'Waffles', 'Grilled Hot Dog', 'Classic Cola Soda', 'Sizzling Bacon Strip', 'Cinnamon Churros', 'Crispy Onion Rings', 'Chocolate Candy Bar', 'Fudgy Brownie', 'Soft Pretzel', 'Mozzarella Sticks', 'Mexican Street Tacos'];
-    await Food.deleteMany({ name: { $in: namesToRemove } });
-
-    // Synchronization: Ensure DB matches the foodsDB in code
-    const allFoods = [...foodsDB.healthy, ...foodsDB.unhealthy];
-
-    console.log("CRITICAL SYNC: Purging and Re-seeding database...");
-    await Food.deleteMany({});
-    const result = await Food.insertMany(allFoods);
-    console.log(`CRITICAL SYNC: ${result.length} items successfully updated! 🌱`);
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.userId = decoded.id;
+    next();
   } catch (err) {
-    console.error("Seeding failed:", err);
+    return res.status(401).json({ error: "Invalid session. Please login again." });
   }
 }
 
@@ -161,21 +137,12 @@ const foodsDB = {
 };
 
 // API: Get foods
-app.get('/api/foods', async (req, res) => {
-  try {
-    const foods = await Food.find({});
-    if (foods && foods.length > 0) {
-      const formatted = {
-        healthy: foods.filter(f => f.category === 'healthy'),
-        unhealthy: foods.filter(f => f.category === 'unhealthy')
-      };
-      res.json(formatted);
-    } else {
-      res.json(foodsDB);
-    }
-  } catch (err) {
-    res.json(foodsDB);
-  }
+app.get('/api/foods', (req, res) => {
+  const formatted = {
+    healthy: foodsStore.filter(f => f.category === 'healthy'),
+    unhealthy: foodsStore.filter(f => f.category === 'unhealthy')
+  };
+  res.json(formatted);
 });
 
 // API: Calculate BMI
@@ -324,12 +291,14 @@ app.post('/api/auth/register', async (req, res) => {
   }
 
   try {
-    const existingUser = await User.findOne({ username });
+    const existingUser = usersStore.find(u => u.username === username);
     if (existingUser) return res.status(400).json({ error: "Email already taken." });
 
     const passwordToken = crypto.createHash('sha256').update(password).digest('hex');
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({
+    
+    const newUser = {
+      _id: crypto.randomUUID(),
       username,
       password: hashedPassword,
       name: name,
@@ -337,9 +306,10 @@ app.post('/api/auth/register', async (req, res) => {
       securityQuestion1: question1,
       securityAnswer1: answer1.trim().toLowerCase(),
       securityQuestion2: question2,
-      securityAnswer2: answer2.trim().toLowerCase()
-    });
-    await newUser.save();
+      securityAnswer2: answer2.trim().toLowerCase(),
+      createdAt: new Date()
+    };
+    usersStore.push(newUser);
 
     const token = jwt.sign({ id: newUser._id }, JWT_SECRET, { expiresIn: '1h' });
     res.cookie('token', token, {
@@ -360,7 +330,7 @@ app.post('/api/auth/register', async (req, res) => {
 app.post('/api/auth/login', async (req, res) => {
   const { username, password } = req.body;
   try {
-    const user = await User.findOne({ username });
+    const user = usersStore.find(u => u.username === username);
     if (!user) return res.status(401).json({ error: "Invalid credentials" });
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -381,14 +351,14 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // API: Check Session Status
-app.get('/api/auth/status', async (req, res) => {
+app.get('/api/auth/status', (req, res) => {
   const token = req.cookies && req.cookies.token;
   if (!token) {
     return res.json({ loggedIn: false });
   }
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await User.findById(decoded.id);
+    const user = usersStore.find(u => u._id === decoded.id);
     if (!user) {
       return res.json({ loggedIn: false });
     }
@@ -405,18 +375,17 @@ app.post('/api/auth/logout', (req, res) => {
 });
 
 // API: Forgot Password - Get Security Questions for User Recovery
-app.post('/api/auth/questions', async (req, res) => {
+app.post('/api/auth/questions', (req, res) => {
   const { username } = req.body;
   if (!username) {
     return res.status(400).json({ error: "Email address required" });
   }
   try {
-    const user = await User.findOne({ username });
+    const user = usersStore.find(u => u.username === username);
     if (!user) {
       return res.status(404).json({ error: "No account associated with this email address." });
     }
     
-    // Fallback if security questions fields are empty
     const q1 = user.securityQuestion1 || "What is your favorite food?";
     const q2 = user.securityQuestion2 || "What was the name of your first pet?";
 
@@ -436,7 +405,7 @@ app.post('/api/auth/reset', async (req, res) => {
     return res.status(400).json({ error: "All fields are required." });
   }
   try {
-    const user = await User.findOne({ username });
+    const user = usersStore.find(u => u.username === username);
     if (!user) {
       return res.status(404).json({ error: "User not found." });
     }
@@ -452,14 +421,12 @@ app.post('/api/auth/reset', async (req, res) => {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     user.passwordToken = passwordToken;
-    await user.save();
 
     res.json({ message: "Password reset successful! You can now log in." });
   } catch (err) {
     res.status(500).json({ error: "Server error during password reset." });
   }
 });
-
 
 // API: Feedback
 app.post('/api/feedback', (req, res) => {
@@ -484,5 +451,8 @@ function startServer(port) {
     }
   });
 }
+
+// Seed the DB in-memory on startup
+seedDB();
 
 startServer(PORT);

@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-require('dotenv').config();
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const User = require('./models/User');
 const Food = require('./models/Food');
@@ -15,19 +15,29 @@ let PORT = parseInt(process.env.PORT) || 3000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/calorix';
 const JWT_SECRET = process.env.JWT_SECRET || 'secretkey123';
 
-// MongoDB Connection
-mongoose.connect(MONGO_URI)
-  .then(async () => {
-    console.log("Connected to MongoDB established ✅");
-    try {
-      await User.collection.dropIndex("passwordToken_1");
-      console.log("Unique index on passwordToken dropped successfully ✅");
-    } catch (e) {
-      console.log("Unique index check: already cleaned up or not present.");
-    }
-    await seedDB();
-  })
-  .catch((err) => console.error("Could not connect to MongoDB ❌", err));
+// MongoDB Connection with Auto-Fallback
+function connectDB(uri) {
+  mongoose.connect(uri)
+    .then(async () => {
+      console.log(`Connected to MongoDB established ✅ (${uri.includes('+srv') ? 'Atlas Cloud' : 'Local Fallback'})`);
+      try {
+        await User.collection.dropIndex("passwordToken_1");
+        console.log("Unique index on passwordToken dropped successfully ✅");
+      } catch (e) {
+        console.log("Unique index check: already cleaned up or not present.");
+      }
+      await seedDB();
+    })
+    .catch((err) => {
+      console.error(`Could not connect to MongoDB ❌ (${uri.includes('+srv') ? 'Atlas Cloud' : 'Local Fallback'})`, err.message);
+      if (uri !== 'mongodb://localhost:27017/calorix') {
+        console.log("Attempting local database connection fallback...");
+        connectDB('mongodb://localhost:27017/calorix');
+      }
+    });
+}
+
+connectDB(MONGO_URI);
 
 async function seedDB() {
   try {
@@ -329,7 +339,8 @@ app.post('/api/auth/register', async (req, res) => {
 
     res.status(201).json({ message: "Registration successful" });
   } catch (err) {
-    res.status(500).json({ error: "Server error during registration" });
+    console.error("Registration error details:", err);
+    res.status(500).json({ error: "Server error during registration", details: err.message });
   }
 });
 

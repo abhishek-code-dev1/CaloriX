@@ -1,23 +1,72 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
+const User = require('./models/User');
+const Food = require('./models/Food');
+
 const app = express();
 let PORT = parseInt(process.env.PORT) || 3000;
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/calorix';
 const JWT_SECRET = process.env.JWT_SECRET || 'secretkey123';
 
-// In-Memory Data Storage (No MongoDB database connection required!)
-const usersStore = [];
-let foodsStore = [];
+// MongoDB Connection with Auto-Fallback
+function connectDB(uri) {
+  mongoose.connect(uri)
+    .then(() => {
+      console.log(`Connected to MongoDB established ✅ (${uri.includes('+srv') ? 'Atlas Cloud' : 'Local Fallback'})`);
+    })
+    .catch((err) => {
+      console.error(`Could not connect to MongoDB ❌ (${uri.includes('+srv') ? 'Atlas Cloud' : 'Local Fallback'})`, err.message);
+      if (uri !== 'mongodb://localhost:27017/calorix') {
+        console.log("Attempting local database connection fallback...");
+        connectDB('mongodb://localhost:27017/calorix');
+      }
+    });
+}
 
-function seedDB() {
-  console.log("CRITICAL SYNC: Re-seeding in-memory database...");
-  foodsStore = [...foodsDB.healthy, ...foodsDB.unhealthy];
-  console.log(`CRITICAL SYNC: ${foodsStore.length} items successfully loaded! 🌱`);
+// Perform unique index cleanup once mongoose connection is fully opened and initialized
+mongoose.connection.once('open', async () => {
+  try {
+    const indexes = await User.collection.indexes();
+    for (const index of indexes) {
+      if (index.key && index.key.passwordToken) {
+        console.log(`Dropping unique index ${index.name} on passwordToken...`);
+        await User.collection.dropIndex(index.name);
+      }
+    }
+    console.log("Database index audit completed successfully ✅");
+  } catch (err) {
+    console.log("Database index cleanup check:", err.message);
+  }
+  
+  // Seed the DB
+  await seedDB();
+});
+
+connectDB(MONGO_URI);
+
+async function seedDB() {
+  try {
+    // Erase all user data for a fresh start
+    console.log("CRITICAL SYNC: Erasing all registered user accounts...");
+    await User.deleteMany({});
+
+    // Synchronization: Ensure DB matches the foodsDB in code
+    const allFoods = [...foodsDB.healthy, ...foodsDB.unhealthy];
+
+    console.log("CRITICAL SYNC: Purging and Re-seeding database...");
+    await Food.deleteMany({});
+    const result = await Food.insertMany(allFoods);
+    console.log(`CRITICAL SYNC: ${result.length} items successfully updated! 🌱`);
+  } catch (err) {
+    console.error("Seeding failed:", err);
+  }
 }
 
 app.use(cors());
@@ -35,18 +84,41 @@ app.use((req, res, next) => {
 });
 
 // Auth Middleware
-function requireAuth(req, res, next) {
+async function requireAuth(req, res, next) {
   const token = req.cookies && req.cookies.token;
   if (!token) {
     return res.status(401).json({ error: "Authentication required" });
   }
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(401).json({ error: "User session expired." });
+    }
     req.userId = decoded.id;
     next();
   } catch (err) {
     return res.status(401).json({ error: "Invalid session. Please login again." });
   }
+}
+
+// Optional Auth Middleware for Public Calculators (BMI, Calories, Steps)
+async function optionalAuth(req, res, next) {
+  const token = req.cookies && req.cookies.token;
+  if (!token) {
+    return next();
+  }
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    if (user) {
+      req.userId = decoded.id;
+      req.user = user;
+    }
+  } catch (err) {
+    // Ignore error, treat as guest
+  }
+  next();
 }
 
 app.use(cors());
@@ -137,16 +209,25 @@ const foodsDB = {
 };
 
 // API: Get foods
-app.get('/api/foods', (req, res) => {
-  const formatted = {
-    healthy: foodsStore.filter(f => f.category === 'healthy'),
-    unhealthy: foodsStore.filter(f => f.category === 'unhealthy')
-  };
-  res.json(formatted);
+app.get('/api/foods', async (req, res) => {
+  try {
+    const foods = await Food.find({});
+    if (foods && foods.length > 0) {
+      const formatted = {
+        healthy: foods.filter(f => f.category === 'healthy'),
+        unhealthy: foods.filter(f => f.category === 'unhealthy')
+      };
+      res.json(formatted);
+    } else {
+      res.json(foodsDB);
+    }
+  } catch (err) {
+    res.json(foodsDB);
+  }
 });
 
 // API: Calculate BMI
-app.post('/api/bmi', requireAuth, (req, res) => {
+app.post('/api/bmi', optionalAuth, async (req, res) => {
   const { weight, height } = req.body;
   if (!weight || !height) {
     return res.status(400).json({ error: "Weight and height are required." });
@@ -167,14 +248,26 @@ app.post('/api/bmi', requireAuth, (req, res) => {
   else if (bmiNum >= 25 && bmiNum < 30) bmiCategory = 'Overweight';
   else if (bmiNum >= 30) bmiCategory = 'Obesity';
 
+  const bmiFormatted = bmiNum.toFixed(1);
+
+  // Connect to database: Save if logged in
+  if (req.user) {
+    try {
+      req.user.bmiHistory.push({ bmi: parseFloat(bmiFormatted), category: bmiCategory });
+      await req.user.save();
+    } catch (dbErr) {
+      console.error("Failed to save BMI to database:", dbErr);
+    }
+  }
+
   res.json({
-    bmi: bmiNum.toFixed(1),
+    bmi: bmiFormatted,
     bmiCategory
   });
 });
 
 // API: Calculate Calories (TDEE and Targets)
-app.post('/api/calories', requireAuth, (req, res) => {
+app.post('/api/calories', optionalAuth, async (req, res) => {
   const { weight, height, age, gender, activityLevel, goal } = req.body;
   if (!weight || !height || !age) {
     return res.status(400).json({ error: "Weight, height, and age are required." });
@@ -217,6 +310,16 @@ app.post('/api/calories', requireAuth, (req, res) => {
     recommendation = `To maintain your current weight, consume around ${targetCalories} kcal per day.`;
   }
 
+  // Connect to database: Save if logged in
+  if (req.user) {
+    try {
+      req.user.caloriesHistory.push({ maintenanceCalories, targetCalories, goal });
+      await req.user.save();
+    } catch (dbErr) {
+      console.error("Failed to save calories to database:", dbErr);
+    }
+  }
+
   res.json({
     maintenanceCalories,
     targetCalories,
@@ -225,7 +328,7 @@ app.post('/api/calories', requireAuth, (req, res) => {
 });
 
 // API: Calculate Steps Active Burn (Distance and Calories)
-app.post('/api/steps', requireAuth, (req, res) => {
+app.post('/api/steps', optionalAuth, async (req, res) => {
   const { steps, pace, weight, height, gender } = req.body;
   if (steps === undefined || steps === null || !pace || !weight || !height) {
     return res.status(400).json({ error: "Steps, pace, weight, and height are required." });
@@ -274,6 +377,22 @@ app.post('/api/steps', requireAuth, (req, res) => {
   // Calories burned = MET * 3.5 * weight (kg) / 200 * duration (minutes)
   const caloriesBurned = Math.round(met * 3.5 * numericWeight / 200 * durationMinutes);
 
+  // Connect to database: Save if logged in
+  if (req.user) {
+    try {
+      req.user.stepsHistory.push({
+        steps: numericSteps,
+        distanceKm,
+        caloriesBurned,
+        pace,
+        durationMinutes
+      });
+      await req.user.save();
+    } catch (dbErr) {
+      console.error("Failed to save steps to database:", dbErr);
+    }
+  }
+
   res.json({
     distanceKm,
     durationMinutes,
@@ -291,14 +410,13 @@ app.post('/api/auth/register', async (req, res) => {
   }
 
   try {
-    const existingUser = usersStore.find(u => u.username === username);
+    const existingUser = await User.findOne({ username });
     if (existingUser) return res.status(400).json({ error: "Email already taken." });
 
     const passwordToken = crypto.createHash('sha256').update(password).digest('hex');
     const hashedPassword = await bcrypt.hash(password, 10);
     
-    const newUser = {
-      _id: crypto.randomUUID(),
+    const newUser = new User({
       username,
       password: hashedPassword,
       name: name,
@@ -306,10 +424,9 @@ app.post('/api/auth/register', async (req, res) => {
       securityQuestion1: question1,
       securityAnswer1: answer1.trim().toLowerCase(),
       securityQuestion2: question2,
-      securityAnswer2: answer2.trim().toLowerCase(),
-      createdAt: new Date()
-    };
-    usersStore.push(newUser);
+      securityAnswer2: answer2.trim().toLowerCase()
+    });
+    await newUser.save();
 
     const token = jwt.sign({ id: newUser._id }, JWT_SECRET, { expiresIn: '1h' });
     res.cookie('token', token, {
@@ -330,7 +447,7 @@ app.post('/api/auth/register', async (req, res) => {
 app.post('/api/auth/login', async (req, res) => {
   const { username, password } = req.body;
   try {
-    const user = usersStore.find(u => u.username === username);
+    const user = await User.findOne({ username });
     if (!user) return res.status(401).json({ error: "Invalid credentials" });
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -351,14 +468,14 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // API: Check Session Status
-app.get('/api/auth/status', (req, res) => {
+app.get('/api/auth/status', async (req, res) => {
   const token = req.cookies && req.cookies.token;
   if (!token) {
     return res.json({ loggedIn: false });
   }
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    const user = usersStore.find(u => u._id === decoded.id);
+    const user = await User.findById(decoded.id);
     if (!user) {
       return res.json({ loggedIn: false });
     }
@@ -375,13 +492,13 @@ app.post('/api/auth/logout', (req, res) => {
 });
 
 // API: Forgot Password - Get Security Questions for User Recovery
-app.post('/api/auth/questions', (req, res) => {
+app.post('/api/auth/questions', async (req, res) => {
   const { username } = req.body;
   if (!username) {
     return res.status(400).json({ error: "Email address required" });
   }
   try {
-    const user = usersStore.find(u => u.username === username);
+    const user = await User.findOne({ username });
     if (!user) {
       return res.status(404).json({ error: "No account associated with this email address." });
     }
@@ -405,7 +522,7 @@ app.post('/api/auth/reset', async (req, res) => {
     return res.status(400).json({ error: "All fields are required." });
   }
   try {
-    const user = usersStore.find(u => u.username === username);
+    const user = await User.findOne({ username });
     if (!user) {
       return res.status(404).json({ error: "User not found." });
     }
@@ -421,6 +538,7 @@ app.post('/api/auth/reset', async (req, res) => {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     user.passwordToken = passwordToken;
+    await user.save();
 
     res.json({ message: "Password reset successful! You can now log in." });
   } catch (err) {
@@ -451,8 +569,5 @@ function startServer(port) {
     }
   });
 }
-
-// Seed the DB in-memory on startup
-seedDB();
 
 startServer(PORT);

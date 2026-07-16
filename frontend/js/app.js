@@ -66,6 +66,9 @@ const calForm = document.getElementById('cal-form');
 // State
 let isLoggedIn = false;
 let allFoods = { healthy: [], unhealthy: [] };
+let bmiUnit = 'metric';
+let calUnit = 'metric';
+let stepsUnit = 'metric';
 
 // Auth verification helper
 async function checkAuthStatus() {
@@ -232,16 +235,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('scroll', () => {
     // Progress Bar
-    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const scrolled = (winScroll / height) * 100;
-    progressBar.style.width = scrolled + "%";
+    if (progressBar) {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+      progressBar.style.width = scrolled + "%";
+    }
 
     // FAB Visibility
-    if (winScroll > 300) {
-      fab.classList.add('visible');
-    } else {
-      fab.classList.remove('visible');
+    if (fab) {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      if (winScroll > 300) {
+        fab.classList.add('visible');
+      } else {
+        fab.classList.remove('visible');
+      }
     }
   });
 
@@ -283,9 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Unit conversion state trackers
-  let bmiUnit = 'metric';
-  let calUnit = 'metric';
+
 
   const bmiWeightMetric = document.getElementById('bmi-weight');
   const bmiWeightImperial = document.getElementById('bmi-weight-lbs');
@@ -340,6 +346,11 @@ document.addEventListener('DOMContentLoaded', () => {
     updateBmiUnitUI();
   };
 
+  if (bmiBtnMetric && bmiBtnImperial) {
+    bmiBtnMetric.addEventListener('click', () => { bmiUnit = 'metric'; updateBmiUnitUI(); });
+    bmiBtnImperial.addEventListener('click', () => { bmiUnit = 'imperial'; updateBmiUnitUI(); });
+  }
+
   const calWeightMetric = document.getElementById('cal-weight');
   const calWeightImperial = document.getElementById('cal-weight-lbs');
   const calHeightMetric = document.getElementById('cal-height');
@@ -392,6 +403,11 @@ document.addEventListener('DOMContentLoaded', () => {
     calUnit = unit;
     updateCalUnitUI();
   };
+
+  if (calBtnMetric && calBtnImperial) {
+    calBtnMetric.addEventListener('click', () => { calUnit = 'metric'; updateCalUnitUI(); });
+    calBtnImperial.addEventListener('click', () => { calUnit = 'imperial'; updateCalUnitUI(); });
+  }
 
   const launchBmi = document.getElementById('launch-bmi');
   const launchCalories = document.getElementById('launch-calories');
@@ -462,8 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Step Counter unit state tracker
-  let stepsUnit = 'metric';
+
 
   const stepsWeightMetric = document.getElementById('steps-weight');
   const stepsWeightImperial = document.getElementById('steps-weight-lbs');
@@ -557,11 +572,6 @@ function celebrate() {
 // Calculate BMI
 bmiForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-
-  if (!isLoggedIn) {
-    window.location.href = `/login.html?redirect=${encodeURIComponent(window.location.pathname + '#launch-bmi')}`;
-    return;
-  }
 
   const weightErr = document.getElementById('bmi-weight-error');
   const heightErr = document.getElementById('bmi-height-error');
@@ -695,11 +705,6 @@ function updateBMIResult(bmi, category) {
 // Calculate Calories
 calForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-
-  if (!isLoggedIn) {
-    window.location.href = `/login.html?redirect=${encodeURIComponent(window.location.pathname + '#launch-calories')}`;
-    return;
-  }
 
   const weightErr = document.getElementById('cal-weight-error');
   const heightErr = document.getElementById('cal-height-error');
@@ -1201,10 +1206,6 @@ async function saveLiveStepsSession() {
 const stepsToggleBtn = document.getElementById('steps-toggle-btn');
 if (stepsToggleBtn) {
   stepsToggleBtn.addEventListener('click', async () => {
-    if (!isLoggedIn) {
-      window.location.href = `/login.html?redirect=${encodeURIComponent(window.location.pathname + '#launch-steps')}`;
-      return;
-    }
 
     if (!liveTracking) {
       liveTracking = true;

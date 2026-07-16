@@ -18,15 +18,8 @@ const JWT_SECRET = process.env.JWT_SECRET || 'secretkey123';
 // MongoDB Connection with Auto-Fallback
 function connectDB(uri) {
   mongoose.connect(uri)
-    .then(async () => {
+    .then(() => {
       console.log(`Connected to MongoDB established ✅ (${uri.includes('+srv') ? 'Atlas Cloud' : 'Local Fallback'})`);
-      try {
-        await User.collection.dropIndex("passwordToken_1");
-        console.log("Unique index on passwordToken dropped successfully ✅");
-      } catch (e) {
-        console.log("Unique index check: already cleaned up or not present.");
-      }
-      await seedDB();
     })
     .catch((err) => {
       console.error(`Could not connect to MongoDB ❌ (${uri.includes('+srv') ? 'Atlas Cloud' : 'Local Fallback'})`, err.message);
@@ -36,6 +29,25 @@ function connectDB(uri) {
       }
     });
 }
+
+// Perform unique index cleanup once mongoose connection is fully opened and initialized
+mongoose.connection.once('open', async () => {
+  try {
+    const indexes = await User.collection.indexes();
+    for (const index of indexes) {
+      if (index.key && index.key.passwordToken) {
+        console.log(`Dropping unique index ${index.name} on passwordToken...`);
+        await User.collection.dropIndex(index.name);
+      }
+    }
+    console.log("Database index audit completed successfully ✅");
+  } catch (err) {
+    console.log("Database index cleanup check:", err.message);
+  }
+  
+  // Seed the DB
+  await seedDB();
+});
 
 connectDB(MONGO_URI);
 

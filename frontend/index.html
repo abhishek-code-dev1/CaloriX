@@ -3,13 +3,56 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#121824">
   <title>CaloriX - Premium Calories & Health Meter</title>
+  <meta name="description" content="CaloriX is a premium health & nutrition tracker. Calculate your BMI, determine daily calorie targets (cut, bulk, maintain), search foods, and generate customized diet plans.">
   <meta name="referrer" content="no-referrer">
+  <link rel="canonical" href="http://localhost:3000/">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="http://localhost:3000/">
+  <meta property="og:title" content="CaloriX - Premium Calories & Health Meter">
+  <meta property="og:description" content="Track nutrition, calculate BMI, manage calorie limits, and discover healthy food options with a premium dark-mode UI.">
+  <meta property="og:image" content="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23fb9078%22/><text y=%22.6em%22 x=%22.1em%22 font-size=%2270%22 font-family=%22sans-serif%22 font-weight=%22bold%22 fill=%22white%22>CX</text></svg>">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="http://localhost:3000/">
+  <meta property="twitter:title" content="CaloriX - Premium Calories & Health Meter">
+  <meta property="twitter:description" content="Track nutrition, calculate BMI, manage calorie limits, and discover healthy food options.">
+  <meta property="twitter:image" content="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23fb9078%22/><text y=%22.6em%22 x=%22.1em%22 font-size=%2270%22 font-family=%22sans-serif%22 font-weight=%22bold%22 fill=%22white%22>CX</text></svg>">
+
+  <!-- Fonts & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="./styles/main.css">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "CaloriX",
+    "url": "http://localhost:3000/",
+    "description": "Premium health, nutrition, and calorie tracking web application.",
+    "applicationCategory": "HealthApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
 </head>
 
 <body>
@@ -27,7 +70,7 @@
 
   <!-- Navbar -->
   <nav class="navbar glass">
-    <div class="logo"><i class="fas fa-fire-alt"
+    <div class="logo"><i class="fas fa-fire-alt" aria-hidden="true"
         style="color: var(--primary-color); margin-right: 10px;"></i>Calori<span>X</span></div>
     <ul class="nav-links" id="nav-links">
       <li><a href="#home">Home</a></li>
@@ -36,242 +79,498 @@
       <li><a href="#foods">Foods Chart</a></li>
     </ul>
     <div class="nav-actions">
-      <div class="menu-toggle" id="mobile-menu" style="display: block;">
-        <i class="fas fa-bars"></i>
+      <button id="auth-btn" class="btn btn-primary" style="padding: 0.5rem 1.2rem; font-size: 0.9rem; border-radius: 12px; display: flex; align-items: center; gap: 8px;">
+        <i class="fas fa-sign-in-alt" aria-hidden="true"></i> <span>Login</span>
+      </button>
+      <div class="menu-toggle" id="mobile-menu" style="display: block;" role="button" tabindex="0" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
+        <i class="fas fa-bars" aria-hidden="true"></i>
       </div>
     </div>
   </nav>
 
-  <!-- Hero Section -->
-  <section id="home" class="hero">
-    <div class="hero-content" data-aos="zoom-out" data-aos-duration="1200">
-      <h1 class="animate-up">Achieve Your <span>Dream Physique</span></h1>
-      <p class="animate-up delay-1">Measure your weight relative to height, calculate precise caloric needs for cutting,
-        bulking, or maintenance, and discover the best foods.</p>
-      <div class="hero-btns animate-up delay-2">
-        <a href="#calculator" class="btn btn-primary">Start Your Journey <i class="fas fa-arrow-right"></i></a>
-      </div>
-    </div>
-  </section>
+  <!-- Mobile Top Bar -->
+  <div class="mobile-top-bar">
+    <div class="mobile-top-logo"><i class="fas fa-fire-alt" aria-hidden="true" style="color: var(--primary-color); margin-right: 8px;"></i>Calori<span>X</span></div>
+    <a href="/login.html" id="mobile-auth-btn" class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 8px; font-weight: 600; display: flex; align-items: center; gap: 4px;">
+      <i class="fas fa-sign-in-alt" aria-hidden="true"></i> <span>Login</span>
+    </a>
+  </div>
 
-  <!-- App Form Section -->
-  <section id="calculator" class="calculator-section">
-    <div class="calculators-container">
+  <!-- Main Bento Grid Container -->
+  <main class="bento-grid">
 
-      <!-- BMI Form -->
-      <div class="glass-card form-card" data-aos="fade-right">
-        <h2><i class="fas fa-weight"></i> BMI Calculator</h2>
-        <p style="text-align:center; color: var(--text-muted); margin-bottom: 2rem;">Check your Body Mass Index (BMI).
-        </p>
-        <form id="bmi-form">
-          <div class="form-row">
-            <div class="input-group">
-              <label>Weight (kg)</label>
-              <input type="number" id="bmi-weight" placeholder="e.g. 75" required>
+    <!-- Card 1: Hero Greeting -->
+    <div class="bento-card span-8 row-span-2 hero-bento-card" id="home">
+      <div class="hero-content" style="text-align: left; padding: 0;" data-aos="zoom-out" data-aos-duration="1200">
+        <h1 class="animate-up" style="font-size: clamp(2rem, 4vw, 3.5rem); text-align: left; margin-bottom: 1rem; line-height: 1.2;">Achieve Your <span>Dream Physique</span></h1>
+        <p class="animate-up delay-1" style="font-size: 1rem; margin-bottom: 1.5rem; color: var(--text-muted);">Measure your weight relative to height, calculate precise caloric needs for cutting, bulking, or maintenance, and discover the best foods.</p>
+        
+        <!-- Personalized Welcome Banner -->
+        <div id="welcome-banner" class="hidden animate-up" style="margin-top: 1rem;">
+          <div class="glass-card welcome-card" style="padding: 1rem 1.5rem; display: inline-flex; align-items: center; gap: 12px; border-left: 4px solid var(--primary-color); background: rgba(255, 255, 255, 0.05); border-radius: 12px; width: 100%; box-sizing: border-box;">
+            <div class="welcome-icon" style="font-size: 1.5rem; color: var(--primary-color);"><i class="fas fa-fire-alt" aria-hidden="true"></i></div>
+            <div style="text-align: left;">
+              <h3 style="font-size: 1.15rem; margin: 0; font-weight: 800;">Welcome back, <span id="welcome-name" style="color: var(--primary-color);">User</span>!</h3>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin: 2px 0 0 0; font-weight: 500;">Let's make today count on your fitness journey. Stronger & healthier every day! 💪</p>
             </div>
-            <div class="input-group">
-              <label>Height (cm)</label>
-              <input type="number" id="bmi-height" placeholder="e.g. 175" required>
-            </div>
-          </div>
-          <button type="submit" class="btn btn-primary full-width">Calculate BMI</button>
-        </form>
-        <div id="bmi-results" class="hidden" style="margin-top: 2rem; text-align: center;">
-          <div class="bmi-gauge">
-            <div class="gauge-bar"></div>
-            <div class="gauge-pointer" id="bmi-pointer"></div>
-          </div>
-          <h3 id="res-bmi" style="font-size: 3.5rem; color: var(--primary-color); margin: 1rem 0;">--</h3>
-          <p id="res-category" style="color: var(--text-muted); font-size: 1.3rem; font-weight: 600;">--</p>
-        </div>
-      </div>
-
-      <!-- Calories Form -->
-      <div class="glass-card form-card" data-aos="fade-left">
-        <h2><i class="fas fa-utensils"></i> Calorie & Macros Planner</h2>
-        <p style="text-align:center; color: var(--text-muted); margin-bottom: 2rem;">Discover how much to eat to lose or
-          gain weight.</p>
-        <form id="cal-form">
-          <div class="form-row">
-            <div class="input-group">
-              <label>Gender</label>
-              <select id="cal-gender" required>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
-            </div>
-            <div class="input-group">
-              <label>Age</label>
-              <input type="number" id="cal-age" value="25" min="10" max="100" required>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="input-group">
-              <label>Weight (kg)</label>
-              <input type="number" id="cal-weight" placeholder="e.g. 75" required>
-            </div>
-            <div class="input-group">
-              <label>Height (cm)</label>
-              <input type="number" id="cal-height" placeholder="e.g. 175" required>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="input-group">
-              <label>Activity Level</label>
-              <select id="cal-activity" required>
-                <option value="sedentary">Sedentary (Little/no exercise)</option>
-                <option value="light">Light (1-3 days/week)</option>
-                <option value="moderate">Moderate (3-5 days/week)</option>
-                <option value="active">Active (6-7 days/week)</option>
-                <option value="veryActive">Very Active (Twice daily)</option>
-              </select>
-            </div>
-            <div class="input-group">
-              <label>Goal</label>
-              <select id="cal-goal" required>
-                <option value="maintain">Maintain Weight</option>
-                <option value="cut">Lose Fat (Cut)</option>
-                <option value="bulk">Gain Muscle (Bulk)</option>
-              </select>
-            </div>
-          </div>
-          <button type="submit" class="btn btn-primary full-width">Calculate Calories</button>
-        </form>
-
-        <!-- Results Display -->
-        <div id="cal-results" class="hidden" style="margin-top: 2rem;">
-          <div class="result-grid">
-            <div class="stat">
-              <span class="label">Maintenance</span>
-              <span class="value" id="res-maintenance">--</span>
-              <span class="sub-label">kcal/day</span>
-            </div>
-            <div class="stat highlight-stat">
-              <span class="label">Target Intake</span>
-              <span class="value" id="res-target">--</span>
-              <span class="sub-label">kcal/day</span>
-            </div>
-          </div>
-          <p id="res-recommendation" class="recommendation-text" style="text-align: center; margin-top: 1rem;"></p>
-          <div style="text-align: center; margin-top: 2rem;">
-            <button id="generate-diet-btn" class="btn btn-primary">Generate My Diet Plan <i
-                class="fas fa-magic"></i></button>
           </div>
         </div>
-      </div>
 
-    </div>
-  </section>
-
-  <!-- Diet Section Removed - Saarthi AI handles this now -->
-
-  <!-- Foods Chart Section -->
-  <section id="foods" class="foods-section">
-    <div class="section-title" data-aos="fade-up">
-      <h2>Food & Calories Chart</h2>
-      <p>Compare healthy and unhealthy options easily.</p>
-      <div class="search-container glass" data-aos="fade-up" data-aos-delay="100"
-        style="margin-top: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
-        <i class="fas fa-search" style="margin-left: 1rem; color: var(--text-muted);"></i>
-        <input type="text" id="food-search" placeholder="Search for foods (e.g. apple, pizza)..."
-          style="width: 100%; border: none; background: transparent; padding: 1rem; outline: none; font-size: 1rem;">
+        <div class="hero-btns animate-up delay-2" style="margin-top: 1.5rem;">
+          <a href="#calculator-bmi" class="btn btn-primary" style="padding: 0.8rem 1.8rem; font-size: 1rem;">Start Your Journey <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+        </div>
       </div>
     </div>
-    <div class="foods-container">
-      <div class="glass-card food-list healthy-list" data-aos="fade-up" data-aos-delay="200">
-        <h3><span class="icon">🥗</span> Healthy Choices</h3>
-        <ul id="healthy-items">
-          <!-- Populated by JS -->
-        </ul>
+
+    <!-- Card 2: Fitness Dashboard / Quick Stats -->
+    <div class="bento-card span-4 row-span-2 quick-stats-card">
+      <div class="quick-stats-header">
+        <i class="fas fa-chart-line" style="color: var(--primary-color);" aria-hidden="true"></i>
+        <span>Fitness Dashboard</span>
       </div>
-      <div class="glass-card food-list unhealthy-list" data-aos="fade-up" data-aos-delay="400">
-        <h3><span class="icon">🍔</span> Unhealthy Cravings</h3>
-        <ul id="unhealthy-items">
-          <!-- Populated by JS -->
-        </ul>
+      <div class="quick-stats-grid">
+        <div class="quick-stat-item">
+          <span class="quick-stat-label">Current BMI</span>
+          <span class="quick-stat-value" id="stats-bmi">--</span>
+        </div>
+        <div class="quick-stat-item">
+          <span class="quick-stat-label">Weight Status</span>
+          <span class="quick-stat-value" id="stats-category" style="font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 110px;">None</span>
+        </div>
+        <div class="quick-stat-item">
+          <span class="quick-stat-label">Daily Target</span>
+          <span class="quick-stat-value" id="stats-target">--</span>
+        </div>
+        <div class="quick-stat-item">
+          <span class="quick-stat-label">Maintenance</span>
+          <span class="quick-stat-value" id="stats-maintenance">--</span>
+        </div>
+        <div class="quick-stat-item">
+          <span class="quick-stat-label">Daily Steps</span>
+          <span class="quick-stat-value" id="stats-steps">--</span>
+        </div>
+        <div class="quick-stat-item">
+          <span class="quick-stat-label">Walk Burned</span>
+          <span class="quick-stat-value" id="stats-burned">--</span>
+        </div>
       </div>
     </div>
-  </section>
 
-  <!-- Feedback & Footer -->
-  <section class="feedback-section glass-card">
-    <h2>User Satisfaction Feedback</h2>
-    <form id="feedback-form" class="feedback-form">
-      <textarea id="feedback-text" placeholder="Tell us how we can improve..." rows="4" required></textarea>
-      <button type="submit" class="btn btn-outline">Submit Feedback</button>
-    </form>
-    <p id="feedback-msg" class="success-msg hidden">Thank you for your feedback!</p>
-  </section>
+    <!-- Card 3: BMI Calculator Launcher -->
+    <div class="bento-card span-4 row-span-2 clickable-launcher-card" id="launch-bmi" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;" data-aos="fade-right">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+        <div>
+          <h2 style="font-size: 1.4rem; display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem;"><i class="fas fa-weight" aria-hidden="true" style="color: var(--primary-color);"></i> BMI Calc</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0; line-height: 1.4;">Calculate Body Mass Index and check weight categories.</p>
+        </div>
+        <div style="background: rgba(251, 144, 120, 0.08); width: 40px; height: 40px; min-width: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-size: 1.15rem;">
+          <i class="fas fa-calculator" aria-hidden="true"></i>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--primary-color); margin-top: 1rem;">
+        <span>Launch Calculator</span>
+        <i class="fas fa-arrow-right" aria-hidden="true" style="transition: transform 0.2s ease;"></i>
+      </div>
+    </div>
+
+    <!-- Card 4: Calories Calculator Launcher -->
+    <div class="bento-card span-4 row-span-2 clickable-launcher-card" id="launch-calories" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;" data-aos="fade-up">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+        <div>
+          <h2 style="font-size: 1.4rem; display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem;"><i class="fas fa-utensils" aria-hidden="true" style="color: var(--primary-color);"></i> Calories</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0; line-height: 1.4;">Find TDEE daily targets to lose, maintain or gain weight.</p>
+        </div>
+        <div style="background: rgba(251, 144, 120, 0.08); width: 40px; height: 40px; min-width: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-size: 1.15rem;">
+          <i class="fas fa-fire-alt" aria-hidden="true"></i>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--primary-color); margin-top: 1rem;">
+        <span>Launch Planner</span>
+        <i class="fas fa-arrow-right" aria-hidden="true" style="transition: transform 0.2s ease;"></i>
+      </div>
+    </div>
+
+    <!-- Card 7: Step Counter Launcher -->
+    <div class="bento-card span-4 row-span-2 clickable-launcher-card" id="launch-steps" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;" data-aos="fade-left">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+        <div>
+          <h2 style="font-size: 1.4rem; display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem;"><i class="fas fa-shoe-prints" aria-hidden="true" style="color: var(--primary-color);"></i> Steps Tracker</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0; line-height: 1.4;">Track steps count, walking distance and estimated burn.</p>
+        </div>
+        <div style="background: rgba(251, 144, 120, 0.08); width: 40px; height: 40px; min-width: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-size: 1.15rem;">
+          <i class="fas fa-walking" aria-hidden="true"></i>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--primary-color); margin-top: 1rem;">
+        <span>Launch Tracker</span>
+        <i class="fas fa-arrow-right" aria-hidden="true" style="transition: transform 0.2s ease;"></i>
+      </div>
+    </div>
+
+    <!-- Card 5: Food & Calories Chart -->
+    <div class="bento-card span-8 row-span-4" id="foods">
+      <div class="section-title" data-aos="fade-up" style="margin-bottom: 2rem; text-align: left;">
+        <h2 style="font-size: 1.8rem; display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;"><i class="fas fa-search" aria-hidden="true" style="color: var(--primary-color);"></i> Food & Calories Chart</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Search and compare healthy and unhealthy options easily.</p>
+        <div class="search-container glass" data-aos="fade-up" data-aos-delay="100" style="margin-top: 1.5rem; max-width: 100%; display: flex; align-items: center; border-radius: 16px;">
+          <i class="fas fa-search" aria-hidden="true" style="margin-left: 1.2rem; color: var(--text-muted);"></i>
+          <input type="text" id="food-search" placeholder="Search for foods (e.g. apple, pizza)..." aria-label="Search for foods" style="width: 100%; border: none; background: transparent; padding: 0.8rem; outline: none; font-size: 1rem; color: var(--text-main);">
+        </div>
+      </div>
+      <div class="foods-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+        <div class="glass-card food-list healthy-list" data-aos="fade-up" data-aos-delay="200" style="padding: 1.5rem; background: rgba(255,255,255,0.01); border-radius: 16px; border: 1px solid var(--glass-border);">
+          <h3 style="font-size: 1.25rem; display: flex; align-items: center; gap: 6px; margin-bottom: 1rem;"><span class="icon">🥗</span> Healthy Choices</h3>
+          <ul id="healthy-items">
+            <!-- Populated by JS -->
+          </ul>
+        </div>
+        <div class="glass-card food-list unhealthy-list" data-aos="fade-up" data-aos-delay="400" style="padding: 1.5rem; background: rgba(255,255,255,0.01); border-radius: 16px; border: 1px solid var(--glass-border);">
+          <h3 style="font-size: 1.25rem; display: flex; align-items: center; gap: 6px; margin-bottom: 1rem;"><span class="icon">🍔</span> Unhealthy Cravings</h3>
+          <ul id="unhealthy-items">
+            <!-- Populated by JS -->
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 6: User Satisfaction Feedback -->
+    <div class="bento-card span-4 row-span-4 feedback-section" style="display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <h2 style="font-size: 1.5rem; display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;"><i class="fas fa-comment-alt" aria-hidden="true" style="color: var(--primary-color);"></i> Feedback</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Tell us how we can improve your fitness experience.</p>
+      </div>
+      <form id="feedback-form" class="feedback-form" style="display: flex; flex-direction: column; gap: 1rem; flex-grow: 1; justify-content: space-between;">
+        <label for="feedback-text" class="visually-hidden">Tell us how we can improve</label>
+        <textarea id="feedback-text" placeholder="Tell us how we can improve..." rows="4" required style="width: 100%; border-radius: 16px; padding: 1rem; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); color: var(--text-main); font-size: 0.95rem; resize: none; flex-grow: 1; margin-bottom: 1rem; outline: none; transition: border-color 0.2s ease;"></textarea>
+        <button type="submit" class="btn btn-outline" style="height: 44px; width: 100%; font-weight: 600; display: inline-flex; align-items: center; justify-content: center;">Submit Feedback</button>
+      </form>
+      <p id="feedback-msg" class="success-msg hidden" style="text-align: center; color: #4ade80; margin-top: 1rem; font-weight: 600;">Thank you for your feedback!</p>
+    </div>
+
+  </main>
+
+  <!-- Mobile Bottom Navigation -->
+  <nav class="mobile-bottom-nav">
+    <a href="#home" class="mobile-nav-tab active" id="tab-home">
+      <i class="fas fa-home" aria-hidden="true"></i>
+      <span>Home</span>
+    </a>
+    <a href="#" class="mobile-nav-tab" id="tab-chatbot">
+      <i class="fas fa-comment-dots" aria-hidden="true"></i>
+      <span>Saarthi AI</span>
+    </a>
+    <a href="#foods" class="mobile-nav-tab" id="tab-foods">
+      <i class="fas fa-apple-alt" aria-hidden="true"></i>
+      <span>Foods</span>
+    </a>
+    <a href="/login.html" class="mobile-nav-tab" id="tab-auth">
+      <i class="fas fa-user-circle" aria-hidden="true"></i>
+      <span>Account</span>
+    </a>
+  </nav>
 
   <footer>
     <p>&copy; 2026 CaloriX App. Developed to help you reach your goals.</p>
   </footer>
 
-  <!-- Auth Modal -->
-  <div id="auth-modal" class="modal hidden">
-    <div class="modal-content glass-card premium-auth">
-      <!-- Signup Form -->
-      <div id="signup-container">
-        <div class="auth-header">
-          <div class="auth-icon"><i class="fas fa-fire-alt"></i></div>
-          <h2>Create Account</h2>
-          <p>Join CaloriX and start your fitness journey today.</p>
-        </div>
-        <form id="signup-form">
-          <div class="input-group">
-            <label><i class="fas fa-user"></i> Username</label>
-            <input type="text" id="signup-user" placeholder="Choose a unique username" required>
-          </div>
-          <div class="input-group">
-            <label><i class="fas fa-lock"></i> Password</label>
-            <input type="password" id="signup-pass" placeholder="Create a unique password" required>
-          </div>
-          <button type="submit" class="btn btn-primary full-width">Get Started <i
-              class="fas fa-arrow-right"></i></button>
-        </form>
-        <p id="signup-error" class="error-msg hidden">Something went wrong. Please try again.</p>
-        <div class="auth-footer">
-          <p>Already have an account? <a href="#" onclick="toggleAuth('login')"
-              style="color: var(--primary-color); font-weight: 600;">Sign In</a></p>
-        </div>
+
+
+  <!-- Dedicated BMI Calculator Modal -->
+  <div id="bmi-calculator-modal" class="calc-modal">
+    <div class="calc-modal-content">
+      <button class="calc-back-btn" id="bmi-back-btn" type="button">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i> Back to Dashboard
+      </button>
+      
+      <h2 style="font-size: 1.8rem; display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
+        <i class="fas fa-weight" aria-hidden="true" style="color: var(--primary-color);"></i> BMI Calculator
+      </h2>
+      <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">
+        Body Mass Index (BMI) is a simple measurement using height and weight to determine weight categories.
+      </p>
+
+      <!-- Unit Selector Toggle -->
+      <div class="unit-toggle-container">
+        <button type="button" class="unit-toggle-btn active" id="bmi-unit-metric">Metric (kg/cm)</button>
+        <button type="button" class="unit-toggle-btn" id="bmi-unit-imperial">Imperial (lb/ft-in)</button>
       </div>
 
-      <!-- Login Form (Hidden by default) -->
-      <div id="login-container" class="hidden">
-        <div class="auth-header">
-          <div class="auth-icon"><i class="fas fa-user-circle"></i></div>
-          <h2>Welcome Back</h2>
-          <p>Login to track your progress.</p>
+      <form id="bmi-form">
+        <div class="form-row">
+          <div class="input-group">
+            <label for="bmi-weight" id="bmi-weight-label-text">Weight (kg)</label>
+            <!-- Metric Weight Input -->
+            <input type="number" id="bmi-weight" placeholder="e.g. 70" step="any" required>
+            <!-- Imperial Weight Input (hidden by default) -->
+            <input type="number" id="bmi-weight-lbs" placeholder="e.g. 154" class="hidden" step="any">
+            <span class="validation-error" id="bmi-weight-error">Weight must be a valid positive number.</span>
+          </div>
+
+          <div class="input-group">
+            <label for="bmi-height" id="bmi-height-label-text">Height (cm)</label>
+            <!-- Metric Height Input -->
+            <input type="number" id="bmi-height" placeholder="e.g. 175" step="any" required>
+            <!-- Imperial Height Input (hidden by default) -->
+            <div id="bmi-height-imperial-group" class="imperial-height-inputs hidden">
+              <input type="number" id="bmi-height-ft" placeholder="ft" min="1" max="10">
+              <input type="number" id="bmi-height-in" placeholder="in" min="0" max="11">
+            </div>
+            <span class="validation-error" id="bmi-height-error">Height must be a valid positive number.</span>
+          </div>
         </div>
-        <form id="login-form">
+
+        <div class="form-row">
           <div class="input-group">
-            <label><i class="fas fa-user"></i> Username</label>
-            <input type="text" id="login-user" required>
+            <label for="bmi-age">Age (Optional)</label>
+            <input type="number" id="bmi-age" placeholder="e.g. 25" min="1" max="120">
+            <span class="validation-error" id="bmi-age-error">Please enter a valid age.</span>
           </div>
           <div class="input-group">
-            <label><i class="fas fa-lock"></i> Password</label>
-            <input type="password" id="login-pass" required>
+            <label for="bmi-gender">Gender (Optional)</label>
+            <select id="bmi-gender">
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
           </div>
-          <button type="submit" class="btn btn-primary full-width">Sign In</button>
-        </form>
-        <p id="login-error" class="error-msg hidden">Invalid credentials</p>
-        <div class="auth-footer">
-          <p>Don't have an account? <a href="#" onclick="toggleAuth('signup')"
-              style="color: var(--primary-color); font-weight: 600;">Register Now</a></p>
+        </div>
+
+        <button type="submit" class="btn btn-primary full-width" style="height: 50px; font-weight: 600; font-size: 1rem; margin-top: 1rem;">
+          Calculate BMI <i class="fas fa-calculator" aria-hidden="true" style="margin-left: 8px;"></i>
+        </button>
+      </form>
+
+      <!-- BMI Results Display -->
+      <div id="bmi-results" class="hidden" style="margin-top: 2.5rem; text-align: center; border-top: 1px solid var(--glass-border); padding-top: 2rem;">
+        <div class="bmi-gauge" style="margin-bottom: 1.5rem;">
+          <div class="gauge-bar"></div>
+          <div class="gauge-pointer" id="bmi-pointer"></div>
+        </div>
+        <h3 id="res-bmi" style="font-size: 3.5rem; color: var(--primary-color); margin: 0.5rem 0;">--</h3>
+        <p id="res-category" style="color: var(--text-muted); font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">--</p>
+        
+        <!-- Health Weight Guidance Box -->
+        <div id="bmi-guidance" style="margin-top: 1.5rem; padding: 1.2rem; border-radius: 16px; background: rgba(251, 144, 120, 0.06); border: 1px solid var(--glass-border); font-size: 0.9rem; line-height: 1.5; color: var(--text-main); text-align: left;">
+          <!-- Populated dynamically by JS -->
         </div>
       </div>
-
-      <button class="close-btn" onclick="closeAuthModal()">&times;</button>
     </div>
   </div>
 
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Dedicated Calories Calculator Modal -->
+  <div id="calories-calculator-modal" class="calc-modal">
+    <div class="calc-modal-content">
+      <button class="calc-back-btn" id="calories-back-btn" type="button">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i> Back to Dashboard
+      </button>
+
+      <h2 style="font-size: 1.8rem; display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
+        <i class="fas fa-utensils" aria-hidden="true" style="color: var(--primary-color);"></i> Calorie & Macros Planner
+      </h2>
+      <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">
+        Find your daily target calorie limit to cut fat, build muscle, or maintain weight based on the Mifflin-St Jeor equation.
+      </p>
+
+      <!-- Unit Selector Toggle -->
+      <div class="unit-toggle-container">
+        <button type="button" class="unit-toggle-btn active" id="cal-unit-metric">Metric (kg/cm)</button>
+        <button type="button" class="unit-toggle-btn" id="cal-unit-imperial">Imperial (lb/ft-in)</button>
+      </div>
+
+      <form id="cal-form">
+        <div class="form-row">
+          <div class="input-group">
+            <label for="cal-gender">Gender</label>
+            <select id="cal-gender" required>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="cal-age">Age</label>
+            <input type="number" id="cal-age" value="25" min="10" max="100" required>
+            <span class="validation-error" id="cal-age-error">Age must be between 10 and 100.</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="input-group">
+            <label for="cal-weight" id="cal-weight-label-text">Weight (kg)</label>
+            <!-- Metric Weight Input -->
+            <input type="number" id="cal-weight" placeholder="e.g. 70" required step="any">
+            <!-- Imperial Weight Input (hidden by default) -->
+            <input type="number" id="cal-weight-lbs" placeholder="e.g. 154" class="hidden" step="any">
+            <span class="validation-error" id="cal-weight-error">Weight must be a valid positive number.</span>
+          </div>
+
+          <div class="input-group">
+            <label for="cal-height" id="cal-height-label-text">Height (cm)</label>
+            <!-- Metric Height Input -->
+            <input type="number" id="cal-height" placeholder="e.g. 175" required step="any">
+            <!-- Imperial Height Input (hidden by default) -->
+            <div id="cal-height-imperial-group" class="imperial-height-inputs hidden">
+              <input type="number" id="cal-height-ft" placeholder="ft" min="1" max="10">
+              <input type="number" id="cal-height-in" placeholder="in" min="0" max="11">
+            </div>
+            <span class="validation-error" id="cal-height-error">Height must be a valid positive number.</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="input-group">
+            <label for="cal-activity">Activity Level</label>
+            <select id="cal-activity" required>
+              <option value="sedentary">Sedentary (Little/no exercise)</option>
+              <option value="light">Light (1-3 days/week)</option>
+              <option value="moderate">Moderate (3-5 days/week)</option>
+              <option value="active">Active (6-7 days/week)</option>
+              <option value="veryActive">Very Active (Twice daily)</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="cal-goal">Goal</label>
+            <select id="cal-goal" required>
+              <option value="maintain">Maintain Weight</option>
+              <option value="cut">Lose Fat (Cut)</option>
+              <option value="bulk">Gain Muscle (Bulk)</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary full-width" style="height: 50px; font-weight: 600; font-size: 1rem; margin-top: 1rem;">
+          Calculate Calories <i class="fas fa-fire-alt" aria-hidden="true" style="margin-left: 8px;"></i>
+        </button>
+      </form>
+
+      <!-- Calories Results Display -->
+      <div id="cal-results" class="hidden" style="margin-top: 2.5rem; border-top: 1px solid var(--glass-border); padding-top: 2rem;">
+        <div class="result-grid">
+          <div class="stat">
+            <span class="label" style="font-size: 0.8rem; letter-spacing: 0.5px;">Maintenance BMR</span>
+            <span class="value" id="res-maintenance" style="font-size: 2rem;">--</span>
+            <span class="sub-label">kcal/day</span>
+          </div>
+          <div class="stat highlight-stat">
+            <span class="label" style="font-size: 0.8rem; letter-spacing: 0.5px;">Target Intake</span>
+            <span class="value" id="res-target" style="font-size: 2rem;">--</span>
+            <span class="sub-label">kcal/day</span>
+          </div>
+        </div>
+        <p id="res-recommendation" class="recommendation-text" style="text-align: center; margin-top: 1.2rem; font-size: 0.95rem; line-height: 1.5; color: var(--text-muted);"></p>
+        <div style="text-align: center; margin-top: 1.5rem;">
+          <button id="generate-diet-btn" class="btn btn-primary" style="height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%;">
+            Generate My Diet Plan <i class="fas fa-magic" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dedicated Step Counter Modal -->
+  <div id="steps-calculator-modal" class="calc-modal">
+    <div class="calc-modal-content">
+      <button class="calc-back-btn" id="steps-back-btn" type="button">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i> Back to Dashboard
+      </button>
+
+      <h2 style="font-size: 1.8rem; display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
+        <i class="fas fa-shoe-prints" aria-hidden="true" style="color: var(--primary-color);"></i> Live Steps Tracker
+      </h2>
+      <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">
+        Track your walking steps in real-time. Accelerometer active sensors are utilized on mobile, and a walking cadence simulator is run on desktop fallbacks.
+      </p>
+
+      <!-- Unit Selector Toggle -->
+      <div class="unit-toggle-container">
+        <button type="button" class="unit-toggle-btn active" id="steps-unit-metric">Metric (kg/km)</button>
+        <button type="button" class="unit-toggle-btn" id="steps-unit-imperial">Imperial (lb/miles)</button>
+      </div>
+
+      <!-- Live Steps Counter Console -->
+      <div id="live-steps-container" style="text-align: center; margin: 1.5rem 0; padding: 2rem; border-radius: 24px; background: rgba(251, 144, 120, 0.05); border: 1px solid var(--glass-border);">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 0.5rem;">
+          <span id="live-status-dot" style="width: 10px; height: 10px; border-radius: 50%; background: var(--text-muted); display: inline-block; transition: background-color 0.3s ease;"></span>
+          <span id="live-status-text" style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Ready to Track</span>
+        </div>
+        <h3 id="live-steps-val" style="font-size: 4.5rem; color: var(--primary-color); margin: 0.5rem 0; font-weight: 900; line-height: 1;">0</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600; margin-bottom: 0;">steps completed</p>
+      </div>
+
+      <form id="steps-form" onsubmit="return false;">
+        <div class="form-row">
+          <div class="input-group">
+            <label for="steps-pace">Walking Pace</label>
+            <select id="steps-pace" required>
+              <option value="slow">Slow (~3 km/h or 1.8 mph)</option>
+              <option value="moderate" selected>Moderate (~5 km/h or 3.1 mph)</option>
+              <option value="fast">Fast (~6.5 km/h or 4.0 mph)</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="steps-gender">Gender (Optional)</label>
+            <select id="steps-gender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="input-group">
+            <label for="steps-weight" id="steps-weight-label-text">Weight (kg)</label>
+            <!-- Metric Weight Input -->
+            <input type="number" id="steps-weight" placeholder="e.g. 70" required step="any" value="70">
+            <!-- Imperial Weight Input (hidden by default) -->
+            <input type="number" id="steps-weight-lbs" placeholder="e.g. 154" class="hidden" step="any" value="154">
+            <span class="validation-error" id="steps-weight-error">Weight must be a valid positive number.</span>
+          </div>
+
+          <div class="input-group">
+            <label for="steps-height" id="steps-height-label-text">Height (cm)</label>
+            <!-- Metric Height Input -->
+            <input type="number" id="steps-height" placeholder="e.g. 175" required step="any" value="175">
+            <!-- Imperial Height Input (hidden by default) -->
+            <div id="steps-height-imperial-group" class="imperial-height-inputs hidden">
+              <input type="number" id="steps-height-ft" placeholder="ft" min="1" max="10" value="5">
+              <input type="number" id="steps-height-in" placeholder="in" min="0" max="11" value="9">
+            </div>
+            <span class="validation-error" id="steps-height-error">Height must be a valid positive number.</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.5rem; text-align: center;">
+          <button type="button" id="steps-toggle-btn" class="btn btn-primary full-width" style="height: 52px; font-weight: 700; font-size: 1.1rem; display: inline-flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s ease;">
+            <i class="fas fa-play" aria-hidden="true"></i> Start Live Tracking
+          </button>
+        </div>
+      </form>
+
+      <!-- Step Counter Results Display -->
+      <div id="steps-results" class="hidden" style="margin-top: 2.5rem; border-top: 1px solid var(--glass-border); padding-top: 2rem;">
+        <div class="result-grid">
+          <div class="stat">
+            <span class="label" style="font-size: 0.8rem; letter-spacing: 0.5px;">Estimated Distance</span>
+            <span class="value" id="res-steps-distance">0.00</span>
+            <span class="sub-label" id="res-steps-distance-unit">km</span>
+          </div>
+          <div class="stat highlight-stat">
+            <span class="label" style="font-size: 0.8rem; letter-spacing: 0.5px;">Calories Burned</span>
+            <span class="value" id="res-steps-calories">0</span>
+            <span class="sub-label">kcal</span>
+          </div>
+        </div>
+        <p id="res-steps-recommendation" class="recommendation-text" style="text-align: center; margin-top: 1.2rem; font-size: 0.95rem; line-height: 1.5; color: var(--text-muted);"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
   <!-- Botpress AI Integration (Saarthi) -->
-  <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
+  <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2026/04/07/09/20260407094033-A729FR64.js" defer></script>
 
-  <script src="./js/app.js"></script>
+  <script src="./js/app.js" defer></script>
 </body>
 
 </html>

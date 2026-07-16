@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CaloriX - Sign In</title>
+  <meta name="description" content="Sign in to CaloriX to calculate BMI, track your nutrition planner, and design customized diet plans.">
+  <meta name="referrer" content="no-referrer">
+  <link rel="canonical" href="http://localhost:3000/login.html">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="http://localhost:3000/login.html">
+  <meta property="og:title" content="CaloriX - Sign In">
+  <meta property="og:description" content="Access your personalized nutrition dashboard on CaloriX. Calculate BMI and daily targets.">
+  <meta property="og:image" content="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23fb9078%22/><text y=%22.6em%22 x=%22.1em%22 font-size=%2270%22 font-family=%22sans-serif%22 font-weight=%22bold%22 fill=%22white%22>CX</text></svg>">
+
+  <!-- Fonts & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="./styles/main.css">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Sign In - CaloriX",
+    "url": "http://localhost:3000/login.html",
+    "description": "Sign in to CaloriX to manage your daily nutrition and fitness goals."
+  }
+  </script>
+</head>
+
+<body>
+
+  <!-- Background Animated Elements -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar glass">
+    <div class="logo" style="cursor: pointer;" onclick="window.location.href='/'">
+      <i class="fas fa-fire-alt" style="color: var(--primary-color); margin-right: 10px;"></i>Calori<span>X</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="/#home">Home</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.9rem; background: rgba(255,255,255,0.4); border: 1px solid var(--glass-border); border-radius: 12px; font-weight: 600;">Back to Home</a>
+    </div>
+  </nav>
+
+  <!-- Login Section -->
+  <section class="calculator-section" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding-top: 100px !important;">
+    <div class="glass-card form-card premium-auth" data-aos="zoom-in" style="width: 100%; max-width: 450px;">
+      
+      <!-- Login Container -->
+      <div id="login-view">
+        <div class="auth-header">
+          <div class="auth-icon"><i class="fas fa-fire-alt"></i></div>
+          <h2>Welcome Back</h2>
+          <p>Login to track your calories and BMI status.</p>
+        </div>
+        <form id="login-form-page" novalidate>
+          <div class="input-group" style="margin-bottom: 1.5rem;">
+            <label for="login-email"><i class="fas fa-envelope" aria-hidden="true"></i> Email Address</label>
+            <input type="email" id="login-email" placeholder="e.g. name@domain.com" required autocomplete="email">
+            <span class="validation-error" id="email-error">Please enter a valid email address.</span>
+          </div>
+          <div class="input-group" style="margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <label for="login-password" style="margin: 0;"><i class="fas fa-lock" aria-hidden="true"></i> Password</label>
+              <a href="#" onclick="showView('forgot')" style="font-size: 0.8rem; color: var(--primary-color); font-weight: 600; text-decoration: none;">Forgot Password?</a>
+            </div>
+            <div class="password-wrapper">
+              <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+              <button type="button" class="password-toggle" onclick="togglePasswordVisibility('login-password', this)" aria-label="Toggle password visibility">
+                <i class="fas fa-eye" aria-hidden="true"></i>
+              </button>
+            </div>
+            <span class="validation-error" id="password-error">Password is required.</span>
+          </div>
+          <button type="submit" class="btn btn-primary full-width" id="login-submit-btn" style="width: 100%;">Sign In <i class="fas fa-sign-in-alt" aria-hidden="true" style="margin-left: 8px;"></i></button>
+        </form>
+        <p id="login-server-error" class="error-msg hidden" style="margin-top: 1.5rem;"></p>
+        <div class="auth-footer" style="margin-top: 2rem;">
+          <p>Don't have an account? <a href="#" onclick="showView('signup')" style="color: var(--primary-color); font-weight: 600;">Register Now</a></p>
+        </div>
+      </div>
+
+      <!-- Signup Container (Hidden by default) -->
+      <div id="signup-view" class="hidden">
+        <div class="auth-header">
+          <div class="auth-icon" style="background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));"><i class="fas fa-user-plus" aria-hidden="true"></i></div>
+          <h2>Create Account</h2>
+          <p>Register to start setting up your custom diet plans.</p>
+        </div>
+        <form id="signup-form-page" novalidate>
+          <div class="input-group" style="margin-bottom: 1.2rem;">
+            <label for="signup-name"><i class="fas fa-user" aria-hidden="true"></i> Full Name</label>
+            <input type="text" id="signup-name" placeholder="e.g. John Doe" required autocomplete="name">
+            <span class="validation-error" id="signup-name-error">Full name is required.</span>
+          </div>
+          <div class="input-group" style="margin-bottom: 1.2rem;">
+            <label for="signup-email"><i class="fas fa-envelope" aria-hidden="true"></i> Email Address</label>
+            <input type="email" id="signup-email" placeholder="e.g. name@domain.com" required autocomplete="email">
+            <span class="validation-error" id="signup-email-error">Please enter a valid email address.</span>
+          </div>
+          <div class="input-group" style="margin-bottom: 1.2rem;">
+            <label for="signup-password"><i class="fas fa-lock" aria-hidden="true"></i> Password</label>
+            <div class="password-wrapper">
+              <input type="password" id="signup-password" placeholder="••••••••" required autocomplete="new-password">
+              <button type="button" class="password-toggle" onclick="togglePasswordVisibility('signup-password', this)" aria-label="Toggle password visibility">
+                <i class="fas fa-eye" aria-hidden="true"></i>
+              </button>
+            </div>
+            <span class="validation-error" id="signup-password-error">Password is required.</span>
+          </div>
+
+          <!-- Security Question 1 -->
+          <div class="input-group" style="margin-bottom: 1.2rem;">
+            <label for="signup-q1"><i class="fas fa-question-circle" aria-hidden="true"></i> Security Question 1</label>
+            <select id="signup-q1" required style="width: 100%; height: 44px; padding: 0.8rem; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; font-size: 0.9rem; color: var(--text-main);">
+              <option value="What is your favorite color?">What is your favorite color?</option>
+              <option value="What is your favorite food?">What is your favorite food?</option>
+              <option value="What is your favorite movie?">What is your favorite movie?</option>
+              <option value="What is your favorite sport?">What is your favorite sport?</option>
+            </select>
+          </div>
+          <div class="input-group" style="margin-bottom: 1.2rem;">
+            <label for="signup-a1"><i class="fas fa-key" aria-hidden="true"></i> Answer 1</label>
+            <input type="text" id="signup-a1" placeholder="Your answer (e.g. blue)" required autocomplete="off">
+            <span class="validation-error" id="signup-a1-error">Security answer 1 is required.</span>
+          </div>
+
+          <!-- Security Question 2 -->
+          <div class="input-group" style="margin-bottom: 1.2rem;">
+            <label for="signup-q2"><i class="fas fa-question-circle" aria-hidden="true"></i> Security Question 2</label>
+            <select id="signup-q2" required style="width: 100%; height: 44px; padding: 0.8rem; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; font-size: 0.9rem; color: var(--text-main);">
+              <option value="What is your favorite animal?">What is your favorite animal?</option>
+              <option value="What city were you born in?">What city were you born in?</option>
+              <option value="What was your first car model?">What was your first car model?</option>
+              <option value="What is your favorite holiday spot?">What is your favorite holiday spot?</option>
+            </select>
+          </div>
+          <div class="input-group" style="margin-bottom: 1.5rem;">
+            <label for="signup-a2"><i class="fas fa-key" aria-hidden="true"></i> Answer 2</label>
+            <input type="text" id="signup-a2" placeholder="Your answer (e.g. lion)" required autocomplete="off">
+            <span class="validation-error" id="signup-a2-error">Security answer 2 is required.</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary full-width" id="signup-submit-btn" style="width: 100%;">Get Started <i class="fas fa-arrow-right" aria-hidden="true" style="margin-left: 8px;"></i></button>
+        </form>
+        <p id="signup-server-error" class="error-msg hidden" style="margin-top: 1.5rem;"></p>
+        <div class="auth-footer" style="margin-top: 2rem;">
+          <p>Already have an account? <a href="#" onclick="showView('login')" style="color: var(--primary-color); font-weight: 600;">Sign In</a></p>
+        </div>
+      </div>
+
+      <!-- Forgot Password Container -->
+      <div id="forgot-view" class="hidden">
+        <div class="auth-header">
+          <div class="auth-icon" style="background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));"><i class="fas fa-key" aria-hidden="true"></i></div>
+          <h2>Forgot Password</h2>
+          <p>Enter your email address to query your security questions.</p>
+        </div>
+        <form id="forgot-form-page" novalidate>
+          <div class="input-group" style="margin-bottom: 2rem;">
+            <label for="forgot-email"><i class="fas fa-envelope" aria-hidden="true"></i> Email Address</label>
+            <input type="email" id="forgot-email" placeholder="e.g. name@domain.com" required autocomplete="email">
+            <span class="validation-error" id="forgot-email-error">Please enter a valid email address.</span>
+          </div>
+          <button type="submit" class="btn btn-primary full-width" id="forgot-submit-btn" style="width: 100%;">Query Questions <i class="fas fa-paper-plane" aria-hidden="true" style="margin-left: 8px;"></i></button>
+        </form>
+        <p id="forgot-server-error" class="error-msg hidden" style="margin-top: 1.5rem;"></p>
+        <div class="auth-footer" style="margin-top: 2rem;">
+          <p>Remembered your password? <a href="#" onclick="showView('login')" style="color: var(--primary-color); font-weight: 600;">Back to Login</a></p>
+        </div>
+      </div>
+
+      <!-- Reset Password Verification Container -->
+      <div id="reset-view" class="hidden">
+        <div class="auth-header">
+          <div class="auth-icon" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));"><i class="fas fa-shield-alt" aria-hidden="true"></i></div>
+          <h2>Answer Questions</h2>
+          <p>Provide correct answers to your security questions to set a new password.</p>
+        </div>
+        <form id="reset-form-page" novalidate>
+          
+          <!-- Question 1 display & input -->
+          <div class="input-group" style="margin-bottom: 1.2rem;">
+            <label id="reset-q1-label" style="font-weight: 600; color: var(--text-main); line-height: 1.4; display: block; margin-bottom: 0.5rem;">Security Question 1</label>
+            <input type="text" id="reset-a1" placeholder="Answer 1" required autocomplete="off">
+            <span class="validation-error" id="reset-a1-error">Answer is required.</span>
+          </div>
+
+          <!-- Question 2 display & input -->
+          <div class="input-group" style="margin-bottom: 1.2rem;">
+            <label id="reset-q2-label" style="font-weight: 600; color: var(--text-main); line-height: 1.4; display: block; margin-bottom: 0.5rem;">Security Question 2</label>
+            <input type="text" id="reset-a2" placeholder="Answer 2" required autocomplete="off">
+            <span class="validation-error" id="reset-a2-error">Answer is required.</span>
+          </div>
+
+          <!-- New Password -->
+          <div class="input-group" style="margin-bottom: 1.2rem;">
+            <label for="reset-password"><i class="fas fa-lock" aria-hidden="true"></i> New Password</label>
+            <div class="password-wrapper">
+              <input type="password" id="reset-password" placeholder="••••••••" required autocomplete="new-password">
+              <button type="button" class="password-toggle" onclick="togglePasswordVisibility('reset-password', this)" aria-label="Toggle password visibility">
+                <i class="fas fa-eye" aria-hidden="true"></i>
+              </button>
+            </div>
+            <span class="validation-error" id="reset-password-error">New password is required.</span>
+          </div>
+
+          <!-- Confirm New Password -->
+          <div class="input-group" style="margin-bottom: 2rem;">
+            <label for="reset-confirm-password"><i class="fas fa-lock" aria-hidden="true"></i> Confirm New Password</label>
+            <div class="password-wrapper">
+              <input type="password" id="reset-confirm-password" placeholder="••••••••" required autocomplete="new-password">
+              <button type="button" class="password-toggle" onclick="togglePasswordVisibility('reset-confirm-password', this)" aria-label="Toggle password visibility">
+                <i class="fas fa-eye" aria-hidden="true"></i>
+              </button>
+            </div>
+            <span class="validation-error" id="reset-confirm-password-error">Passwords must match.</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary full-width" id="reset-submit-btn" style="width: 100%;">Reset Password <i class="fas fa-check" aria-hidden="true" style="margin-left: 8px;"></i></button>
+        </form>
+        <p id="reset-server-error" class="error-msg hidden" style="margin-top: 1.5rem;"></p>
+        <div class="auth-footer" style="margin-top: 2rem;">
+          <p>Need to try again? <a href="#" onclick="showView('forgot')" style="color: var(--primary-color); font-weight: 600;">Enter Email Again</a></p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
+  
+  <script>
+    // Initialize AOS
+    document.addEventListener('DOMContentLoaded', () => {
+      AOS.init({
+        duration: 800,
+        easing: 'ease-out-back',
+        once: true
+      });
+    });
+
+    // Show password helper
+    function togglePasswordVisibility(inputId, toggleBtn) {
+      const input = document.getElementById(inputId);
+      const icon = toggleBtn.querySelector('i');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+    // Toggle views
+    function showView(view) {
+      const loginView = document.getElementById('login-view');
+      const signupView = document.getElementById('signup-view');
+      const forgotView = document.getElementById('forgot-view');
+      const resetView = document.getElementById('reset-view');
+      
+      // Hide messages
+      document.getElementById('login-server-error').classList.add('hidden');
+      document.getElementById('signup-server-error').classList.add('hidden');
+      document.getElementById('forgot-server-error').classList.add('hidden');
+      document.getElementById('reset-server-error').classList.add('hidden');
+      
+      // Hide all first
+      loginView.classList.add('hidden');
+      signupView.classList.add('hidden');
+      forgotView.classList.add('hidden');
+      resetView.classList.add('hidden');
+      
+      if (view === 'login') {
+        loginView.classList.remove('hidden');
+      } else if (view === 'signup') {
+        signupView.classList.remove('hidden');
+      } else if (view === 'forgot') {
+        forgotView.classList.remove('hidden');
+      } else if (view === 'reset') {
+        resetView.classList.remove('hidden');
+      }
+    }
+
+    // Helper for celebration
+    function celebrate() {
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#6366f1', '#a855f7', '#00f2fe']
+      });
+    }
+
+    // Validate email format
+    function validateEmail(email) {
+      const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return re.test(String(email).toLowerCase());
+    }
+
+    // Handle Query Params for Redirects
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectUrl = urlParams.get('redirect') || '/';
+
+    // Submit Forms
+    const loginForm = document.getElementById('login-form-page');
+    const signupForm = document.getElementById('signup-form-page');
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const emailInput = document.getElementById('login-email');
+      const passInput = document.getElementById('login-password');
+      const emailGroup = emailInput.closest('.input-group');
+      const passGroup = passInput.closest('.input-group');
+      const submitBtn = document.getElementById('login-submit-btn');
+      const serverError = document.getElementById('login-server-error');
+
+      // Reset styles
+      emailGroup.classList.remove('invalid');
+      passGroup.classList.remove('invalid');
+      serverError.classList.add('hidden');
+
+      let valid = true;
+
+      if (!validateEmail(emailInput.value)) {
+        emailGroup.classList.add('invalid');
+        valid = false;
+      }
+      if (!passInput.value.trim()) {
+        passGroup.classList.add('invalid');
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      // Loading state
+      submitBtn.disabled = true;
+      submitBtn.classList.add('btn-loading');
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: emailInput.value, password: passInput.value })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          celebrate();
+          setTimeout(() => {
+            window.location.href = redirectUrl;
+          }, 600);
+        } else {
+          serverError.innerText = data.error || "Invalid credentials.";
+          serverError.classList.remove('hidden');
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('btn-loading');
+        }
+      } catch (err) {
+        serverError.innerText = "Connection failed. Please try again later.";
+        serverError.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('btn-loading');
+      }
+    });
+
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nameInput = document.getElementById('signup-name');
+      const emailInput = document.getElementById('signup-email');
+      const passInput = document.getElementById('signup-password');
+      const q1Select = document.getElementById('signup-q1');
+      const a1Input = document.getElementById('signup-a1');
+      const q2Select = document.getElementById('signup-q2');
+      const a2Input = document.getElementById('signup-a2');
+
+      const nameGroup = nameInput.closest('.input-group');
+      const emailGroup = emailInput.closest('.input-group');
+      const passGroup = passInput.closest('.input-group');
+      const a1Group = a1Input.closest('.input-group');
+      const a2Group = a2Input.closest('.input-group');
+      
+      const submitBtn = document.getElementById('signup-submit-btn');
+      const serverError = document.getElementById('signup-server-error');
+
+      // Reset styles
+      nameGroup.classList.remove('invalid');
+      emailGroup.classList.remove('invalid');
+      passGroup.classList.remove('invalid');
+      a1Group.classList.remove('invalid');
+      a2Group.classList.remove('invalid');
+      serverError.classList.add('hidden');
+
+      let valid = true;
+
+      if (!nameInput.value.trim()) {
+        nameGroup.classList.add('invalid');
+        valid = false;
+      }
+      if (!validateEmail(emailInput.value)) {
+        emailGroup.classList.add('invalid');
+        valid = false;
+      }
+      if (!passInput.value.trim() || passInput.value.length < 6) {
+        passGroup.classList.add('invalid');
+        const errSpan = document.getElementById('signup-password-error');
+        errSpan.innerText = passInput.value.trim() ? "Password must be at least 6 characters long." : "Password is required.";
+        valid = false;
+      }
+      if (!a1Input.value.trim()) {
+        a1Group.classList.add('invalid');
+        valid = false;
+      }
+      if (!a2Input.value.trim()) {
+        a2Group.classList.add('invalid');
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      // Loading state
+      submitBtn.disabled = true;
+      submitBtn.classList.add('btn-loading');
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: nameInput.value,
+            username: emailInput.value,
+            password: passInput.value,
+            question1: q1Select.value,
+            answer1: a1Input.value,
+            question2: q2Select.value,
+            answer2: a2Input.value
+          })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          celebrate();
+          setTimeout(() => {
+            window.location.href = redirectUrl;
+          }, 600);
+        } else {
+          serverError.innerText = data.error || "Registration failed.";
+          serverError.classList.remove('hidden');
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('btn-loading');
+        }
+      } catch (err) {
+        serverError.innerText = "Connection failed. Please try again later.";
+        serverError.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('btn-loading');
+      }
+    });
+
+    // Forgot Password Form Submit
+    const forgotForm = document.getElementById('forgot-form-page');
+    forgotForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const emailInput = document.getElementById('forgot-email');
+      const emailGroup = emailInput.closest('.input-group');
+      const submitBtn = document.getElementById('forgot-submit-btn');
+      const serverError = document.getElementById('forgot-server-error');
+
+      emailGroup.classList.remove('invalid');
+      serverError.classList.add('hidden');
+
+      if (!validateEmail(emailInput.value)) {
+        emailGroup.classList.add('invalid');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.classList.add('btn-loading');
+
+      try {
+        const res = await fetch('/api/auth/questions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: emailInput.value })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          document.getElementById('reset-q1-label').innerText = "Security Question 1: " + data.question1;
+          document.getElementById('reset-q2-label').innerText = "Security Question 2: " + data.question2;
+          
+          document.getElementById('reset-a1').value = '';
+          document.getElementById('reset-a2').value = '';
+          document.getElementById('reset-password').value = '';
+          document.getElementById('reset-confirm-password').value = '';
+          
+          showView('reset');
+        } else {
+          serverError.innerText = data.error || "Request failed.";
+          serverError.classList.remove('hidden');
+        }
+      } catch (err) {
+        serverError.innerText = "Connection error. Please try again.";
+        serverError.classList.remove('hidden');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('btn-loading');
+      }
+    });
+
+    // Reset Password Form Submit
+    const resetForm = document.getElementById('reset-form-page');
+    resetForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const forgotEmail = document.getElementById('forgot-email').value;
+      const a1Input = document.getElementById('reset-a1');
+      const a2Input = document.getElementById('reset-a2');
+      const passInput = document.getElementById('reset-password');
+      const confirmInput = document.getElementById('reset-confirm-password');
+
+      const a1Group = a1Input.closest('.input-group');
+      const a2Group = a2Input.closest('.input-group');
+      const passGroup = passInput.closest('.input-group');
+      const confirmGroup = confirmInput.closest('.input-group');
+
+      const submitBtn = document.getElementById('reset-submit-btn');
+      const serverError = document.getElementById('reset-server-error');
+
+      a1Group.classList.remove('invalid');
+      a2Group.classList.remove('invalid');
+      passGroup.classList.remove('invalid');
+      confirmGroup.classList.remove('invalid');
+      serverError.classList.add('hidden');
+
+      let valid = true;
+
+      if (!a1Input.value.trim()) {
+        a1Group.classList.add('invalid');
+        valid = false;
+      }
+      if (!a2Input.value.trim()) {
+        a2Group.classList.add('invalid');
+        valid = false;
+      }
+      if (!passInput.value.trim() || passInput.value.length < 6) {
+        passGroup.classList.add('invalid');
+        const errSpan = document.getElementById('reset-password-error');
+        errSpan.innerText = passInput.value.trim() ? "Password must be at least 6 characters long." : "Password is required.";
+        valid = false;
+      }
+      if (passInput.value !== confirmInput.value) {
+        confirmGroup.classList.add('invalid');
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      submitBtn.disabled = true;
+      submitBtn.classList.add('btn-loading');
+
+      try {
+        const res = await fetch('/api/auth/reset', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: forgotEmail,
+            answer1: a1Input.value,
+            answer2: a2Input.value,
+            newPassword: passInput.value
+          })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          celebrate();
+          alert("Your password has been successfully reset! You can now log in.");
+          showView('login');
+        } else {
+          serverError.innerText = data.error || "Reset failed.";
+          serverError.classList.remove('hidden');
+        }
+      } catch (err) {
+        serverError.innerText = "Connection error. Please try again.";
+        serverError.classList.remove('hidden');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('btn-loading');
+      }
+    });
+  </script>
+</body>
+
+</html>

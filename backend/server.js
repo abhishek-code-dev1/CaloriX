@@ -25,6 +25,10 @@ mongoose.connect(MONGO_URI)
 
 async function seedDB() {
   try {
+    // Erase all user data for a fresh start
+    console.log("CRITICAL SYNC: Erasing all registered user accounts...");
+    await User.deleteMany({});
+
     // Auto-cleanup unwanted items
     const namesToRemove = ['Cottage Cheese', 'Pomegranate', 'Kiwi', 'Chia Seeds', 'Hummus', 'Energy Drink', 'Baklava', 'Pancakes', 'Waffles', 'Grilled Hot Dog', 'Classic Cola Soda', 'Sizzling Bacon Strip', 'Cinnamon Churros', 'Crispy Onion Rings', 'Chocolate Candy Bar', 'Fudgy Brownie', 'Soft Pretzel', 'Mozzarella Sticks', 'Mexican Street Tacos'];
     await Food.deleteMany({ name: { $in: namesToRemove } });
@@ -42,6 +46,34 @@ async function seedDB() {
 }
 
 app.use(cors());
+
+// Simple cookie parsing middleware
+app.use((req, res, next) => {
+  req.cookies = {};
+  if (req.headers.cookie) {
+    req.headers.cookie.split(';').forEach(cookie => {
+      const parts = cookie.split('=');
+      req.cookies[parts.shift().trim()] = decodeURIComponent(parts.join('='));
+    });
+  }
+  next();
+});
+
+// Auth Middleware
+function requireAuth(req, res, next) {
+  const token = req.cookies && req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ error: "Authentication required" });
+  }
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.userId = decoded.id;
+    next();
+  } catch (err) {
+    return res.status(401).json({ error: "Invalid session. Please login again." });
+  }
+}
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
 
@@ -119,38 +151,52 @@ app.get('/api/foods', async (req, res) => {
 });
 
 // API: Calculate BMI
-app.post('/api/bmi', (req, res) => {
+app.post('/api/bmi', requireAuth, (req, res) => {
   const { weight, height } = req.body;
   if (!weight || !height) {
     return res.status(400).json({ error: "Weight and height are required." });
   }
 
+  const numWeight = parseFloat(weight);
+  const numHeight = parseFloat(height);
+
+  if (isNaN(numWeight) || numWeight <= 0 || isNaN(numHeight) || numHeight <= 0) {
+    return res.status(400).json({ error: "Weight and height must be positive numbers." });
+  }
+
   // Calculate BMI
-  const heightInMeters = height / 100;
-  const bmi = (weight / (heightInMeters * heightInMeters)).toFixed(1);
+  const heightInMeters = numHeight / 100;
+  const bmiNum = numWeight / (heightInMeters * heightInMeters);
   let bmiCategory = 'Normal weight';
-  if (bmi < 18.5) bmiCategory = 'Underweight';
-  else if (bmi >= 25 && bmi < 29.9) bmiCategory = 'Overweight';
-  else if (bmi >= 30) bmiCategory = 'Obesity';
+  if (bmiNum < 18.5) bmiCategory = 'Underweight';
+  else if (bmiNum >= 25 && bmiNum < 30) bmiCategory = 'Overweight';
+  else if (bmiNum >= 30) bmiCategory = 'Obesity';
 
   res.json({
-    bmi,
+    bmi: bmiNum.toFixed(1),
     bmiCategory
   });
 });
 
 // API: Calculate Calories (TDEE and Targets)
-app.post('/api/calories', (req, res) => {
+app.post('/api/calories', requireAuth, (req, res) => {
   const { weight, height, age, gender, activityLevel, goal } = req.body;
   if (!weight || !height || !age) {
     return res.status(400).json({ error: "Weight, height, and age are required." });
   }
 
+  const numWeight = parseFloat(weight);
+  const numHeight = parseFloat(height);
+  const numAge = parseInt(age);
+
+  if (isNaN(numWeight) || numWeight <= 0 || isNaN(numHeight) || numHeight <= 0 || isNaN(numAge) || numAge <= 0) {
+    return res.status(400).json({ error: "Weight, height, and age must be valid positive numbers." });
+  }
+
   // Calculate TDEE (Mifflin-St Jeor)
   const isMale = gender === 'male';
   let s = isMale ? 5 : -161;
-  const currAge = age || 25;
-  const bmr = 10 * weight + 6.25 * height - 5 * currAge + s;
+  const bmr = 10 * numWeight + 6.25 * numHeight - 5 * numAge + s;
 
   // Activity Multipliers
   const multipliers = {
@@ -183,16 +229,75 @@ app.post('/api/calories', (req, res) => {
   });
 });
 
+// API: Calculate Steps Active Burn (Distance and Calories)
+app.post('/api/steps', requireAuth, (req, res) => {
+  const { steps, pace, weight, height, gender } = req.body;
+  if (steps === undefined || steps === null || !pace || !weight || !height) {
+    return res.status(400).json({ error: "Steps, pace, weight, and height are required." });
+  }
+
+  const numericSteps = parseInt(steps);
+  const numericWeight = parseFloat(weight);
+  const numericHeight = parseFloat(height);
+
+  if (isNaN(numericSteps) || numericSteps <= 0) {
+    return res.status(400).json({ error: "Steps must be a valid positive number." });
+  }
+  if (isNaN(numericWeight) || numericWeight <= 0) {
+    return res.status(400).json({ error: "Weight must be a valid positive number." });
+  }
+  if (isNaN(numericHeight) || numericHeight <= 0) {
+    return res.status(400).json({ error: "Height must be a valid positive number." });
+  }
+
+  // Stride length calculation (based on height and gender)
+  const isMale = gender === 'male';
+  const strideFactor = isMale ? 0.415 : 0.413;
+  const strideLengthMeters = (numericHeight * strideFactor) / 100;
+
+  // Distance in kilometers
+  const distanceKm = parseFloat(((numericSteps * strideLengthMeters) / 1000).toFixed(2));
+
+  // MET depending on pace (standard walking guidelines)
+  let cadence = 100; // default Moderate
+  let met = 3.3; // default Moderate
+  
+  if (pace === 'slow') {
+    cadence = 80;
+    met = 2.0;
+  } else if (pace === 'moderate') {
+    cadence = 100;
+    met = 3.3;
+  } else if (pace === 'fast') {
+    cadence = 120;
+    met = 5.0;
+  }
+
+  // Duration in minutes
+  const durationMinutes = Math.round(numericSteps / cadence);
+
+  // Calories burned = MET * 3.5 * weight (kg) / 200 * duration (minutes)
+  const caloriesBurned = Math.round(met * 3.5 * numericWeight / 200 * durationMinutes);
+
+  res.json({
+    distanceKm,
+    durationMinutes,
+    caloriesBurned,
+    paceLabel: pace.charAt(0).toUpperCase() + pace.slice(1)
+  });
+});
+
+
 // API: Register User
 app.post('/api/auth/register', async (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
-    return res.status(400).json({ error: "Username and password required" });
+  const { username, password, name, question1, answer1, question2, answer2 } = req.body;
+  if (!username || !password || !name || !question1 || !answer1 || !question2 || !answer2) {
+    return res.status(400).json({ error: "All registration fields and security questions are required." });
   }
 
   try {
     const existingUser = await User.findOne({ username });
-    if (existingUser) return res.status(400).json({ error: "Username already taken." });
+    if (existingUser) return res.status(400).json({ error: "Email already taken." });
 
     const passwordToken = crypto.createHash('sha256').update(password).digest('hex');
     const duplicatedPass = await User.findOne({ passwordToken });
@@ -204,9 +309,22 @@ app.post('/api/auth/register', async (req, res) => {
     const newUser = new User({
       username,
       password: hashedPassword,
-      passwordToken: passwordToken
+      name: name,
+      passwordToken: passwordToken,
+      securityQuestion1: question1,
+      securityAnswer1: answer1.trim().toLowerCase(),
+      securityQuestion2: question2,
+      securityAnswer2: answer2.trim().toLowerCase()
     });
     await newUser.save();
+
+    const token = jwt.sign({ id: newUser._id }, JWT_SECRET, { expiresIn: '1h' });
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: false, // Since this runs locally on http
+      maxAge: 3600000, // 1 hour
+      path: '/'
+    });
 
     res.status(201).json({ message: "Registration successful" });
   } catch (err) {
@@ -225,11 +343,104 @@ app.post('/api/auth/login', async (req, res) => {
     if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
 
     const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
-    res.json({ message: "Login successful", token });
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: false, // Since this runs locally on http
+      maxAge: 3600000, // 1 hour
+      path: '/'
+    });
+
+    res.json({ message: "Login successful" });
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }
 });
+
+// API: Check Session Status
+app.get('/api/auth/status', async (req, res) => {
+  const token = req.cookies && req.cookies.token;
+  if (!token) {
+    return res.json({ loggedIn: false });
+  }
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.json({ loggedIn: false });
+    }
+    res.json({ loggedIn: true, username: user.username, name: user.name });
+  } catch (err) {
+    res.json({ loggedIn: false });
+  }
+});
+
+// API: Logout User
+app.post('/api/auth/logout', (req, res) => {
+  res.clearCookie('token', { path: '/' });
+  res.json({ message: "Logged out successfully" });
+});
+
+// API: Forgot Password - Get Security Questions for User Recovery
+app.post('/api/auth/questions', async (req, res) => {
+  const { username } = req.body;
+  if (!username) {
+    return res.status(400).json({ error: "Email address required" });
+  }
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ error: "No account associated with this email address." });
+    }
+    
+    // Fallback if security questions fields are empty
+    const q1 = user.securityQuestion1 || "What is your favorite food?";
+    const q2 = user.securityQuestion2 || "What was the name of your first pet?";
+
+    res.json({
+      question1: q1,
+      question2: q2
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Server error during questions query." });
+  }
+});
+
+// API: Reset Password - Verify Questions & Update
+app.post('/api/auth/reset', async (req, res) => {
+  const { username, answer1, answer2, newPassword } = req.body;
+  if (!username || !answer1 || !answer2 || !newPassword) {
+    return res.status(400).json({ error: "All fields are required." });
+  }
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    const match1 = (user.securityAnswer1 || "pizza").trim().toLowerCase() === answer1.trim().toLowerCase();
+    const match2 = (user.securityAnswer2 || "buddy").trim().toLowerCase() === answer2.trim().toLowerCase();
+
+    if (!match1 || !match2) {
+      return res.status(400).json({ error: "Verification failed. Incorrect answers to security questions." });
+    }
+
+    const passwordToken = crypto.createHash('sha256').update(newPassword).digest('hex');
+    const duplicatedPass = await User.findOne({ passwordToken, _id: { $ne: user._id } });
+    if (duplicatedPass) {
+      return res.status(400).json({ error: "This password has already been used by another user. Choose a unique password." });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    user.passwordToken = passwordToken;
+    await user.save();
+
+    res.json({ message: "Password reset successful! You can now log in." });
+  } catch (err) {
+    res.status(500).json({ error: "Server error during password reset." });
+  }
+});
+
 
 // API: Feedback
 app.post('/api/feedback', (req, res) => {

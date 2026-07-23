@@ -409,6 +409,17 @@ app.post('/api/auth/register', async (req, res) => {
     return res.status(400).json({ error: "All registration fields and security questions are required." });
   }
 
+  // Security checks: Email format validation
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!emailRegex.test(username)) {
+    return res.status(400).json({ error: "Please enter a valid email address." });
+  }
+
+  // Security checks: Password length validation
+  if (password.length < 6) {
+    return res.status(400).json({ error: "Password must be at least 6 characters long." });
+  }
+
   try {
     const existingUser = await User.findOne({ username });
     if (existingUser) return res.status(400).json({ error: "Email already taken." });
@@ -446,6 +457,10 @@ app.post('/api/auth/register', async (req, res) => {
 // API: Login User
 app.post('/api/auth/login', async (req, res) => {
   const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ error: "Email and password are required." });
+  }
+
   try {
     const user = await User.findOne({ username });
     if (!user) return res.status(401).json({ error: "Invalid credentials" });
@@ -520,6 +535,11 @@ app.post('/api/auth/reset', async (req, res) => {
   const { username, answer1, answer2, newPassword } = req.body;
   if (!username || !answer1 || !answer2 || !newPassword) {
     return res.status(400).json({ error: "All fields are required." });
+  }
+
+  // Security checks: Password length validation
+  if (newPassword.length < 6) {
+    return res.status(400).json({ error: "Password must be at least 6 characters long." });
   }
   try {
     const user = await User.findOne({ username });
